@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8">
+<title>- 数据表格</title>
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+<link th:href="@{/css/font-awesome.min.css}" rel="stylesheet">
+<link th:href="@{/css/animate.css}" rel="stylesheet">
+<link th:href="@{/css/style.css}" rel="stylesheet">
+<link th:href="@{/css/font-awesome.css}" rel="stylesheet">
+<link th:href="@{/css/plugins/bootstrap-table/bootstrap-table.min.css}" rel="stylesheet">
+ <style type="text/css">
+        .place{
+            position:relative;
+            left:200px;
+        }
+    </style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content  animated fadeInRight">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox ">
+					<div class="ibox-content" style="height: 250px">
+					<form class="form-horizontal m-t" id="frm" method="post"  enctype="multipart/form-data" >
+                    	<input type="hidden" name="projectId" id = "projectId" th:value="${projectId}">
+                    	<br/>
+                    	<br/>
+                        <div class="btn-group place" >
+	                              <label title="上传图片" for="inputImage" class="btn btn-success  dim ">
+	                                  <input type="file" accept="image/*" name="introducePic " id="inputImage" class="hide place"> 
+	                                  <i class="fa fa-upload"></i>&nbsp;选择图片
+	                              </label>
+				            </div>
+		                          <br/>
+		                          <br/>
+	                       	<div class=" place">
+								<button class="btn btn-primary " type="submit" >
+										<i class="fa fa-check"></i>&nbsp;提交
+								</button>
+							</div>
+					</form>
+                    </div>
+                </div>
+             </div>
+          </div>
+		</div>
+</body>
+<div th:replace="common :: commonjs"></div>
+<script type="text/javascript" th:inline="javascript">
+var id =[[${projectId}]] ;
+$(document).ready(function () {
+    $("#frm").validate({
+	    rules: {
+	    	projectId: {
+	    	required: true
+	      },
+	      introducePic: {
+	    	required: true
+	      }
+	    },
+	    messages: {},
+	    submitHandler:function(form){
+	    	var uploadFile = new FormData($(form)[0]);
+	    	$.ajax({
+	    		   type: "POST",
+	    		   dataType: "json",
+	    		   url: "/admin/project/introduce",
+	    		   data: uploadFile,
+                   processData : false,
+                   // 告诉jQuery不要去设置Content-Type请求头
+                   contentType : false,
+	    		   success: function(msg){
+	    			   layer.msg(msg.msg, {time: 2000},function(){
+                           var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                           parent.layer.close(index);
+	    			   });
+	    		   }
+	    		});
+        }
+	});
+	});
+    </script>   
+</html>

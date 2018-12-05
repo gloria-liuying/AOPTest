@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title> - 团队管理</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+ 	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet">
+    <link th:href="@{/css/animate.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    
+    <style type="text/css">
+      .box{
+    	height:250px;
+    	width:530px;
+    }.newTeam{
+    	positive:relative;
+    	left:1000px;
+    }.cf li{
+        list-style-type :none;
+     }ul{
+     	padding:0;margin:0
+     }h4,p{
+     	color:#564e4c;
+     }
+    </style>
+</head>
+
+<body class="gray-bg">
+   <div class="wrapper wrapper-content animated fadeInRight">
+     <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>所有团队</h5>
+                    </div>
+                 </div> 
+        	</div>
+        </div>
+     <div class="row">
+      		<div class="col-sm-8">
+                  <span class="newTeam">
+                        <a th:href="@{/team/create}" class="btn btn-primary" >创建新团队</a>
+                  </span> 
+        	</div>
+            <div class="col-sm-4">
+                <div class="ibox">
+                   	<form method="get" id="frm">
+                        <div class="input-group">
+                           <input type="text" id="teamName" class="form-control input-sm" name="name" placeholder="请输入要查找的团队名称">
+                           <div class="input-group-btn">
+                           		<button type="reset" class="btn btn-sm btn-primary">
+                                 	重置
+                               </button>
+                               <button type="submit" class="btn btn-sm btn-success">
+                                 	  搜索
+                               </button>
+                           </div>
+                       </div>
+                    </form>
+                 </div> 
+        	</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <ul id="loadingList" class="cf">
+                 <li class="ibox box" th:each="leftList:${leftList}">
+                    <div class="ibox-title">
+                        <a class="label label-primary pull-right" th:href="@{'/team/detail/'+${leftList.id}}">详情</a>
+                        <h5 th:text="${leftList.name}"></h5>
+                    </div>
+                    <div class="ibox-content"  >
+                        <div class="team-members" >
+                        	<span th:each="userImgs:${leftList.userMember}" >
+	                            <a href="#">
+	                            	<img th:title="${userImgs.nickName}" class="img-circle" th:if="${userImgs.pic}!=null and ${userImgs.pic}!=''" th:src="@{${userImgs.pic}}">
+	                            	<img th:title="${userImgs.nickName}" class="img-circle" th:if="${userImgs.pic}==null or ${userImgs.pic}==''" src="http://192.168.2.113:1024/resource/user/headPortraitPic/20180880default.jpg">
+	                            </a>
+                            </span>
+                        </div>
+                        <br/>
+                        <h4>团队简介</h4>
+                        <p  th:text="${leftList.description}">
+                        </p>
+                    </div>
+            	</li>
+            	</ul>
+            </div>
+             <div class="col-sm-4" >
+             <ul id="loadingListTwo" class="cf">
+                 <li class="ibox box" th:each="centerList:${centerList}">
+                    <div class="ibox-title">
+                        <a class="label label-primary pull-right" th:href="@{'/team/detail/'+${centerList.id}}">详情</a>
+                        <h5 th:text="${centerList.name}"></h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="team-members" >
+                        	<span th:each="userImgs:${centerList.userMember}" >
+	                            <a href="#">
+	                            	<img th:title="${userImgs.nickName}" class="img-circle" th:if="${userImgs.pic}!=null and ${userImgs.pic}!=''" th:src="@{${userImgs.pic}}">
+	                            	<img th:title="${userImgs.nickName}" class="img-circle" th:if="${userImgs.pic}==null or ${userImgs.pic}==''" src="http://192.168.2.113:1024/resource/user/headPortraitPic/20180880default.jpg">
+	                            </a>
+                            </span>
+                        </div> 
+                        <br/>
+                        <h4>团队简介</h4>
+                        <p th:text="${centerList.description}">
+                        </p>
+                    </div>
+                </li>
+                </ul>
+            </div>
+            <div class="col-sm-4">
+             <ul id="loadingListThree" class="cf">
+                 <li class="ibox box"  th:each="rightList:${rightList}">
+               		 <div class="ibox-title">
+                        <a class="label label-primary pull-right" th:href="@{'/team/detail/'+${rightList.id}}">详情</a>
+                        <h5 th:text="${rightList.name}"></h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="team-members" >
+                        	<div class="team-members" >
+                        	<span th:each="userImgs:${rightList.userMember}">
+	                           <img th:title="${userImgs.nickName}" class="img-circle" th:if="${userImgs.pic}!=null and ${userImgs.pic}!=''" th:src="@{${userImgs.pic}}">
+	                            	<img th:title="${userImgs.nickName}" class="img-circle" th:if="${userImgs.pic}==null or ${userImgs.pic}==''" src="http://192.168.2.113:1024/resource/user/headPortraitPic/20180880default.jpg">
+	                            </a>
+                            </span>
+                        </div>
+                        </div>
+                        <br/>
+                        <h4>团队简介</h4>
+                        <p  th:text="${rightList.description}">
+                        </p>
+                    </div>
+                  </li>
+                </ul>
+            </div> 
+        </div>
+	 <div class="load-more">正在加载...</div>
+    </div>
+   <div th:replace="common :: commonjs"></div>
+   <script type="text/javascript" th:inline="javascript">
+   $(document).ready(function(){
+  		var name = $("#teamName").val();
+	  	$.ajax({
+	  		url:"/admin/team/index",
+	  		data:{name:"name"},
+	  		success:function(data){
+	  		}
+	  	})
+	  	
+	  	var loadingModule = (function () {//下拉加载模块
+
+            var $window = $(window),
+                $document = $(document),
+                ajaxNum = 2;
+
+            //初始化加载条显示
+            function initBtmBar() {
+                var listNum = $('#loadingList>li').length;
+                if(listNum < 4){
+                    $('.load-more').html('');
+                }else{
+                    $('.load-more').html('正在加载...');
+                }
+            }
+
+            //判断滚动条到达底部
+            function isBottom() {
+                if($window.scrollTop() >= $document.height()-$window.height()){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+
+            //参数为真的时候改写加载更多字体内容
+            function changeLoadingText(_Boolean) {
+                if(_Boolean){
+                    $('.load-more').html('没有更多内容啦!');
+                }else{
+                    $('.load-more').html('正在加载...');
+                }
+            }
+
+            //下拉刷新，渲染数据
+            function ajaxLoading(){
+                $.ajax({
+                    type:"POST",
+                    dataType:'json',
+                    url:"/admin/team/getteam",
+                    async:true,
+                    data:{
+                        size:9,
+                        current:ajaxNum
+                    },
+                    error:function(request){
+                        console.log("服务失败！");
+                    },
+                    success:function(data){
+                        ajaxNum += 1;
+                        //渲染模板
+                        loadingTempl(data);
+                        var _Boolean = data.length < 8 ? true:false;
+                        changeLoadingText(_Boolean);
+                    }
+                })
+
+            } 
+
+            //加载数据
+            function loadingTempl(data) {
+            	$.each(data,function(commentIndex,comment){
+            		if(comment.length>0){
+            			$.each(comment,function(sonIndex,sonList){
+            				var html='';
+            				 html+='<li class="ibox box">'
+                             +'<div class="ibox-title">'
+                             +'<a class="label label-primary pull-right" href="/admin/team/detail/'+sonList.id+'">详情</a>'
+                             +'<h5>'+sonList.name+'</h5></div>'
+                             +'<div class="ibox-content"  >'
+                             +'<div class="team-members" >'
+                             $.each(sonList['userMember'],function(memIndex,memList){
+                            	 html+='<span>'
+                                 +'<a href="#">'
+                                 if(memList.pic!=null&&memList.pic!=''){
+                                	 html+='<img title="'+memList['nickName']+'" class="img-circle"  src="'+memList.pic+'">'
+                                 }else{
+                                	 html+='<img title="'+memList['nickName']+'" class="img-circle"  src="http://192.168.2.113:1024/resource/user/headPortraitPic/20180880default.jpg">'
+                                 }
+                                +'</a></span>'
+                             })
+                              html+='</div><br/><h4>团队简介</h4>'
+                            	  if(sonList.description!=null&&sonList.description!=''){
+                                  	 html+='<p >'+sonList.description+'</p></div></li>'
+                                   }else{
+                                  	 html+='<p ></p></div></li>'
+                                   }
+                             if(commentIndex==0){
+                            	 console.log(html);
+             					$("#loadingList").append(html);
+             				}
+             				if(commentIndex==1){
+             					console.log(html);
+             					$("#loadingListTwo").append(html);
+             				}
+             				if(commentIndex==2){
+             					console.log(html);
+             					$("#loadingListThree").append(html);
+             				}
+            				})
+            			}
+            	});
+            }
+
+            //scroll事件
+            function scrollEvent() {
+                $window.on('scroll', function () {
+                    if(isBottom()){
+                        ajaxLoading();
+                    }
+                });
+            }
+
+            //阻止冒泡class='pull'
+            function pullPropagation() {
+                $('#loadingList').on('click','li .pull',function (event) {
+                    event.stopPropagation();
+                })
+            }
+
+            //loadingModule启动函数
+            function loadingStart() {
+                initBtmBar();
+                scrollEvent();
+                pullPropagation();
+            }
+
+            return {
+                changeLoadingText : changeLoadingText,
+                ajaxLoading : ajaxLoading,
+                scrollEvent : scrollEvent,
+                isBottom : isBottom,
+                initBtmBar : initBtmBar,
+                loadingStart : loadingStart
+            };
+            
+        })();
+
+    	loadingModule.loadingStart();
+	})
+   </script>
+</body>
+
+</html>

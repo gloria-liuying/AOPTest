@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body th:fragment="commonjs">
+		<script th:src="@{/js/jquery.min.js}"></script>
+		<script th:src="@{/js/bootstrap.min.js}"></script>
+		<script th:src="@{/js/plugins/metisMenu/jquery.metisMenu.js}"></script>
+		<script th:src="@{/js/plugins/slimscroll/jquery.slimscroll.min.js}"></script>
+		<script th:src="@{/js/plugins/layer/layer.min.js}"></script>
+		<!-- 自定义js -->
+		<script th:src="@{/js/hAdmin.js}"></script>
+		<script type="text/javascript" th:src="@{/js/index.js}"></script>
+		<!-- 第三方插件 -->
+		<script th:src="@{/js/plugins/pace/pace.min.js}"></script>
+		<script th:src="@{/js/plugins/bootstrap-table/bootstrap-table.min.js}"></script>
+		<script th:src="@{/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js}"></script>
+		<script th:src="@{/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js}"></script>
+		<script th:src="@{/js/demo/bootstrap-table-demo.js}"></script>
+		<!-- jquery -->
+		<script th:src="@{/js/plugins/validate/jquery.validate.min.js}"></script>
+		<script th:src="@{/js/plugins/validate/messages_zh.min.js}"></script>
+		<script th:src="@{/js/content.js}"></script>
+		<script th:src="@{/js/plugins/jeditable/jquery.jeditable.js}"></script>
+		<script th:src="@{/js/plugins/dataTables/jquery.dataTables.js}"></script>
+		<script th:src="@{/js/plugins/dataTables/dataTables.bootstrap.js}"></script>
+		
+
+</body>
+</html>

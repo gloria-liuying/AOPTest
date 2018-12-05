@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title> - 数据表格</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+   	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet">
+
+    <!-- Data Tables -->
+    <link th:href="@{/css/plugins/dataTables/dataTables.bootstrap.css}" rel="stylesheet">
+    <link th:href="@{/css/animate.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                   
+                    <div class="ibox-content">
+						 <div class="ibox-title" style="color:#CC3300">
+                        <h5 ><i class="fa fa-pencil"></i>楼盘详情 <small></small></h5>
+                   		 </div>
+                        <table class="table table-striped table-bordered table-hover">
+                            <thead >
+                                <tr th:each="detailVo:${detailVo}">
+							        <th>客户姓名</th>
+							        <th>客户地址</th>
+							        <th>房号</th>
+							        <th>订房日期</th>
+							        <th>合同日期</th>
+							        <th>成交单价</th>
+							        <th>实付总金额</th>
+							        <th>应付总金额</th>
+							        <th>已付总金额</th>
+							        <th>优惠政策</th>
+							        <th th:if="${not detailVo.isDisposable()}">首付款</th>
+							        <th th:if="${not detailVo.isDisposable()}">贷款</th> 
+							        <th th:if="${detailVo.isDisposable()}">一次性付款</th> 
+                                </tr>
+                            </thead>
+                            <tbody>
+                               <tr class="gradeU" th:each="detailVo:${detailVo}">
+									<td  th:text="${detailVo.customerName}"></td>
+									<td  th:text="${detailVo.address}"></td>
+									<td  th:text="${detailVo.houseNum}+${detailVo.houseUnitNum}+${detailVo.suiteNum}"></td>
+									<td  th:text="${detailVo.houseTime}"></td>
+									<td  th:text="${detailVo.contractTime}"></td>
+									<td  th:text="${detailVo.unitPrice}"></td>
+									<td  th:text="${detailVo.actualPay}"></td>
+									<td  th:text="${detailVo.dealTotal}"></td>
+									<td  th:text="${detailVo.hasPaid}"></td>
+									<td  th:text="${detailVo.saleStrategyIdStr}"></td>
+									<td th:if="${not detailVo.isDisposable()}" th:text="${detailVo.firstPayStr}"></td>
+									<td th:if="${not detailVo.isDisposable()}" th:text="${detailVo.loanStr}"></td>
+									<td th:if="${detailVo.isDisposable()}" th:text="${detailVo.firstPayStr}"></td>
+							   </tr>	
+                            </tbody>
+                             </table>
+                              <table class="table table-striped table-bordered table-hover dataTables-example " >
+                             <div class="ibox-title" style="color:#CC3300">
+                           	 <h5 ><i class="fa fa-heart"></i> 放款处理详情 </h5>
+                   		    </div>
+                            <thead>
+                                <tr>
+							        <th>订单状态</th>
+							        <th>日期</th>
+							        <th>流程备注</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                               <tr class="gradeU" th:each="detail:${detail}">
+									<td  th:text="${detail.orderStatus}"></td>
+									<td  th:text="${detail.checkinTime}"></td>
+									<td  th:text="${detail.flowNotes}"></td>
+							   </tr>	
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	<div th:replace="common :: commonjs"></div>
+	<script type="text/javascript">
+	/* $(document).ready(function () {
+        $('.dataTables-example').dataTable();
+
+        /* Init DataTables */
+        var oTable = $('#editable').dataTable();
+
+        /* Apply the jEditable handlers to the table */
+        oTable.$('td').editable('../example_ajax.php', {
+            "callback": function (sValue, y) {
+                var aPos = oTable.fnGetPosition(this);
+                oTable.fnUpdate(sValue, aPos[0], aPos[1]);
+            },
+            "submitdata": function (value, settings) {
+                return {
+                    "row_id": this.parentNode.getAttribute('id'),
+                    "column": oTable.fnGetPosition(this)[2]
+                };
+            },
+
+            "width": "90%",
+            "height": "100%"
+        });
+
+
+    });
+
+    function fnClickAddRow() {
+        $('#editable').dataTable().fnAddData([
+            "Custom row",
+            "New row",
+            "New row",
+            "New row",
+            "New row"]);
+
+    } */
+	 function changeDateFormat(cellval) {
+	        var dateVal = cellval + "";
+	        if (cellval != null) {
+	            var date = new Date(parseInt(dateVal.replace("/Date(", "").replace(")/", ""), 10));
+	            var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+	            var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+	            
+	            var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+	            var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+	            var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+	            
+	            return date.getFullYear() + "-" + month + "-" + currentDate + " " + hours + ":" + minutes + ":" + seconds;
+	        }
+	    }
+    </script>
+
+</body>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<title>- 数据表格</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+<link th:href="@{/css/font-awesome.min.css}" rel="stylesheet">
+
+<!-- Data Tables -->
+<link th:href="@{/css/plugins/dataTables/dataTables.bootstrap.css}"
+	rel="stylesheet">
+<link th:href="@{/css/animate.css}" rel="stylesheet">
+<link th:href="@{/css/style.css}" rel="stylesheet">
+<link th:href="@{/js/plugins/fancybox/jquery.fancybox.css}" rel="stylesheet">
+<link th:href="@{/css/plugins/blueimp/css/blueimp-gallery.min.css}" rel="stylesheet">
+<link th:href="@{/css/font-awesome.css?}" rel="stylesheet">
+
+ 	<style>
+        .lightBoxGallery img {
+            margin: 5px;
+            width: 300px;
+        }
+    </style>
+
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<div class="row">
+							<div class="col-sm-12">
+								<div class="m-b-md">
+									<button class= "btn btn-white btn-xs  pull-right" onclick="goBack()">
+									<i class="fa fa-exchange"></i>&nbsp;返回</button>
+									<h2 class="text-center" th:text="${projectDetail.name}"></h2>
+									<input type="hidden" id="pid" name="pid" th:value="${projectDetail.id}">
+								</div>
+							</div>
+                        <!-- <p>
+                            <strong>blueimp Gallery</strong>主要为移动设备而设计，同时也支持桌面浏览器。可定制视频和相片，支持触摸操作，支持全屏播放等。项目地址： <a href="https://github.com/blueimp/Gallery" target="_blank">https://github.com/blueimp/Gallery</a>
+                        </p> -->
+                        <div class="lightBoxGallery">
+                        <div class="ibox-content">
+							<div class="media-body ">
+								<h2><small class="pull-right"></small> <strong>户型图</strong>&nbsp;&nbsp;&nbsp;&nbsp;<br/><br/><br/>
+								<small ><button type="button" class="pull-right btn btn-success " th:onclick=" 'javascript:upload('+${projectDetail.id}+')'">
+								<i class="fa fa-upload"></i>上传户型图</button>
+								</small><br/></h2>
+							</div>
+						</div>
+							<span th:each="proPic:${proPic}">
+							<input type="hidden" name="" th:value="${proPic.id}">
+                            <a th:if="${proPic.type}==2" th:href="@{${proPic.picUrl}}" title="图片" data-gallery=""> 
+                            	<img alt="image" height="350" width="350" th:if="${proPic.type}==2" th:src="@{${proPic.picUrl}}">
+                            </a>
+							<button th:if="${proPic.type}==2" th:onclick=" 'javascript:delHouseTypePic('+${proPic.id}+')'"><i class="fa fa-times"></i></button>
+							</span>
+                            <div id="blueimp-gallery" class="blueimp-gallery">
+                                <div class="slides"></div>
+                                <h3 class="title"></h3>
+                                <a class="prev">‹</a>
+                                <a class="next">›</a>
+                                <a class="close">×</a>
+                                <a class="play-pause"></a>
+                                <ol class="indicator"></ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div th:replace="common :: commonjs"></div>
+    <script th:src="@{/js/plugins/blueimp/jquery.blueimp-gallery.min.js}"></script>
+	<script type="text/javascript">
+        function upload(id){
+        	 layer.open({
+          		  type:2,
+          		  title:'上传户型图',
+          		  shadeClose:true,
+          		  shade: [0.5, '#000'],
+          		  area:['800px','400px'],
+          		  content:'/admin/project/houseType/upload/'+id,
+          		  end:function(index){
+          			 self.location.reload();
+          		  }
+          	  });
+        }
+        
+        function goBack()
+    	{
+    	window.history.back()
+    	}
+        
+        function delHouseTypePic(id){
+        	layer.confirm('确定删除吗？',{icon:3,title:'提示'},function(index){
+        		$.ajax({
+        			type:"POST",
+        			datetype:"json",
+        			url:"/admin/project/deleteImage/"+id,
+        			success:function(index){
+        				self.location.reload();
+        			}
+        		});
+        	});
+        }
+	</script>
+</body>
+
+</html>

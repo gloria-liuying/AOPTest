@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8">
+<title>- 数据表格</title>
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+<link th:href="@{/css/font-awesome.min.css}" rel="stylesheet">
+<link th:href="@{/css/animate.css}" rel="stylesheet">
+<link th:href="@{/css/style.css}" rel="stylesheet">
+<link th:href="@{/css/plugins/bootstrap-table/bootstrap-table.min.css}" rel="stylesheet">
+	<style type="text/css">
+	.form-group{
+		margin-bottom:0px;
+	}.butpal{
+		position:absolute;
+		left:-80px;
+		top:20px;
+	}	</style>
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content  animated fadeInRight">
+		<div class="row">
+			<div class="col-sm-2"></div>
+			 <div class="col-sm-8">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-content mailbox-content">
+                        <div class="file-manager">
+                        	   <div class="panel-heading showcu" >
+                                   <h5 class="panel-title " >
+                                       <a data-toggle="collapse" data-parent="#accordion" href="tabs_panels.html#collapseOne">客户信息</a>
+                                   </h5>
+                               </div>
+                               <div class="panel-body form-horizontal">
+	                                <ul class="folder-list m-b-md" style="padding: 0">
+		                               <li>
+		                                  <div class="form-group"><label class="col-sm-3 control-label">姓名：</label><div class="col-sm-5"><p class="form-control-static" th:text="${contract.customerFlowVo.name}"></p></div></div>
+		                               </li>
+		                               <li>
+		                                   <div class="form-group"><label class="col-sm-3 control-label">身份证：</label><div class="col-sm-5"><p class="form-control-static" th:text="${contract.customerFlowVo.idNumber}"></p></div></div>
+		                               </li>
+		                               <li>
+		                                  <div class="form-group"><label class="col-sm-3 control-label"> 手机号码：</label><div class="col-sm-5"><p class="form-control-static" th:text="${contract.customerFlowVo.telephone}"></p></div></div>
+		                               </li>
+		                               <li>
+		                                   <div class="form-group"><label class="col-sm-3 control-label">地址：</label><div class="col-sm-5"><p class="form-control-static"  th:text="${contract.customerFlowVo.areaAddress}"></p></div></div>
+		                               </li>
+		                           </ul>   
+                               </div>
+                               <div class="panel-heading">
+                                   <h4 class="panel-title ">
+                                       <a data-toggle="collapse" data-parent="#accordion" href="tabs_panels.html#collapseThree">签合同房产信息</a>
+                                   </h4>
+                               </div>
+                                   <div class="panel-body form-horizontal">
+                                   	   <ul class="folder-list m-b-md" style="padding: 0">
+			                                 <li>
+			                                    <div class="form-group"><label class="col-sm-3 control-label">房间号：</label><div class="col-sm-5">
+		                                	    <p class="form-control-static" th:text="${contract.suiteVo.houseNum}+'号楼'+${contract.suiteVo.houseUnitNum}+'单元'+${contract.suiteVo.suiteNum}+'号房'"></p></div></div>
+			                                </li>
+			                                 <li>
+		                                		<div class="form-group"><label class="col-sm-3 control-label">建筑面积：</label><div class="col-sm-5">
+			                                	<p class="form-control-static" th:text="${contract.suiteVo.area}+'平方米'"></p></div></div>
+			                                </li>
+			                                <li>
+			                                	<div class="form-group"><label class="col-sm-3 control-label">单价：</label><div class="col-sm-5">
+			                                	<p class="form-control-static" th:text="${contract.suiteVo.unitPrice}+'元/平方米'"></p></div></div>
+			                                </li>
+			                                <li>
+			                                	<div class="form-group"><label class="col-sm-3 control-label">房间号：</label><div class="col-sm-5">
+			                                	<p class="form-control-static"  th:text="${contract.suiteVo.area*contract.suiteVo.unitPrice==null?'
+			                                    &nbsp;&nbsp;&nbsp;&nbsp;':contract.suiteVo.area*contract.suiteVo.unitPrice/10000}+'万'"></p></div></div>
+			                                </li>
+			                                <li>
+			                                	<div class="form-group"><label class="col-sm-3 control-label"> 应付：：</label><div class="col-sm-5">
+			                                	<p class="form-control-static"  th:text="${contract.suiteVo.area*contract.suiteVo.unitPrice==null?'&nbsp;&nbsp;&nbsp;&nbsp;':contract.
+			                                    suiteVo.area*contract.suiteVo.unitPrice/10000}+'万'"></p></div></div>
+			                                </li>
+			                                <li>
+			                                	<div class="form-group"><label class="col-sm-3 control-label">物业用途：</label><div class="col-sm-5">
+			                                	<p class="form-control-static" th:text="${suiteUse}"></p></div></div>
+			                                </li> 
+		                                    <li>
+			                                  	<div class="form-group"><label class="col-sm-3 control-label">实付总价：</label><div class="col-sm-5">
+		                                		<p class="form-control-static" th:text="${contract.suiteVo.area*contract.suiteVo.unitPrice==null?'
+			                                    &nbsp;&nbsp;&nbsp;&nbsp;':contract.suiteVo.area*contract.suiteVo.unitPrice/10000}+'万
+			                                  	'"></p></div></div>	
+			                                </li>
+			                                <li>
+			                                	<div class="form-group"><label class="col-sm-3 control-label">置业顾问：</label><div class="col-sm-5">
+		                                		<p class="form-control-static" th:text="${contract.saler.nickName}"></p></div></div>
+			                                </li>
+			                                <li>
+			                                	<div class="form-group"><label class="col-sm-3 control-label">销售主管：</label><div class="col-sm-5">
+		                                		<p class="form-control-static" th:text="${contract.leader.nickName}"></p></div></div>
+			                                </li>
+			                                <li>
+			                                	<div class="form-group"><label class="col-sm-3 control-label">付款方式：</label><div class="col-sm-5">
+		                                		<p class="form-control-static" th:text="${contract.loanFlag?'贷款':'全款'}"></p></div></div>
+			                                </li>
+			                                <li th:if="${contract.loanFlag}">
+			                                	<div class="form-group"><label class="col-sm-3 control-label">首付时间：</label><div class="col-sm-5">
+		                                		<p class="form-control-static" th:text="${contract.firstPay}==null?'':${contract.firstPay}+'元'"></p></div></div>
+			                                </li>
+			                                <li th:if="${contract.loanFlag}">
+			                                	<div class="form-group"><label class="col-sm-3 control-label">首付时间：</label><div class="col-sm-5">
+		                                		<p class="form-control-static" id="firstPayTime"></p></div></div>
+			                                </li>
+			                                <li th:if="${contract.loanFlag}">
+			                                	<div class="form-group"><label class="col-sm-3 control-label">贷款银行：</label><div class="col-sm-5">
+		                                		<p class="form-control-static" th:text="${contract.bankName}"></p></div></div>
+			                                </li>
+			                            </ul>
+		                            <div class="col-sm-2"></div>   
+		                            <div class="col-sm-6">
+		                            	<ul class="category-list" style="padding: 0" th:if="${contract.manager} !=null and ${contract.financer} !=null">
+			                                <li><a>审批经理</a></li>
+			                                <li><a href="#">
+				                            	&nbsp;&nbsp;<img  class="img-circle"  height="40" width="40" th:if="${contract.manager.pic}=='' or ${contract.manager.pic}==null"
+				                            	 src="http://192.168.2.113:1024/resource/user/headPortraitPic/20180880default.jpg">
+				                            	<img  class="img-circle" th:if="${contract.manager.pic}!='' and ${contract.manager.pic}!=null"  height="40" width="40" th:src="@{${contract.manager.pic}}">&nbsp;&nbsp;&nbsp;&nbsp;<span th:text="${contract.manager.nickName}"></span>
+				                            </a>
+			                                </li>
+			                                <li></li>
+			                                <li><a>财务</a><a href="#">
+				                            	&nbsp;&nbsp;<img  class="img-circle"  height="40" width="40" th:if="${contract.financer.pic}=='' or ${contract.financer.pic}==null"
+				                            	src="http://192.168.2.113:1024/resource/user/headPortraitPic/20180880default.jpg">
+				                            	<img  class="img-circle" th:if="${contract.financer.pic}!='' and ${contract.financer.pic}!=null"  height="40" width="40" th:src="@{${contract.financer.pic}}">&nbsp;&nbsp;&nbsp;&nbsp;<span th:text="${contract.financer.nickName}"></span>
+				                            </a>
+			                                </li>
+			                            </ul>
+			                             <ul class="category-list" style="padding: 0" th:if="${contract.manager} ==null and ${contract.financer} ==null">
+			                                <li><a>审批经理</a></li>
+			                                <li><a href="#">暂无
+				                            </a>
+			                                </li>
+			                                <li></li>
+			                                <li><a>财务</a><a href="#">暂无
+				                            </a>
+			                                </li> 
+			                            </ul>    
+                               </div>
+                           </div> 
+                        </div>
+                    </div>
+                </div>
+            </div><div class="col-sm-2"><button class="butpal" onclick="goBack()">返回</button></div>
+        </div>
+	</div>
+</body>
+<div th:replace="common :: commonjs"></div>
+<script type="text/javascript" th:inline="javascript">
+var vo = [[${contract}]];
+$(function(){
+	$("#time").html(changeDateFormat(vo.createTime));
+	$("#firstPayTime").html(changeDateFormat(vo.firstPayTime));
+	if(vo.financer!=null&&vo.financer.pic!=null&&vo.financer.pic!=""){
+		$("#manage").attr("src",vo.manager.pic);
+		$("#manageName").html(vo.manager.nickName);
+	}
+	if(vo.manager!=null&&vo.manager.pic!=null&&vo.manager.pic!=""){
+	$("#finance").attr("src",vo.financer.pic);
+	$("#financeName").html(vo.financer.nickName);
+	}
+});
+
+function goBack()
+{
+    window.history.back();
+}
+
+function changeDateFormat(cellval) {
+    var dateVal = cellval + "";
+    if (cellval != null) {
+        var date = new Date(parseInt(dateVal.replace("/Date(", "").replace(")/", ""), 10));
+        var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+        var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+        
+        var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+        var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+        var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+        
+        return date.getFullYear() + "-" + month + "-" + currentDate ;
+    }
+}
+</script>
+</html>

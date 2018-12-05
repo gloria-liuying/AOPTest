@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>- 数据表格</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+<link th:href="@{/css/font-awesome.min.css}" rel="stylesheet">
+<link th:href="@{/css/animate.css}" rel="stylesheet">
+<link th:href="@{/css/style.css}" rel="stylesheet">
+<link th:href="@{/js/plugins/fancybox/jquery.fancybox.css}" rel="stylesheet">
+<link th:href="@{/css/plugins/blueimp/css/blueimp-gallery.min.css}" rel="stylesheet">
+<style type="text/css">
+	.feed-activity-list{
+		position:relative; 
+		left:80px;
+	} ,
+	.projectcon{
+		 padding-top: 15px;
+            padding-bottom: 5px;
+            border-bottom:1px solid #e5e5e5;
+            font-size: 16px;
+            color: #0170cc;
+            margin-bottom: 5px;
+	} .cf li{
+            padding-bottom: 30px;
+        }
+	</style>
+ 
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+            <div class="col-sm-12">
+            	<button class= "pull-right" onclick="goBack()">返回</button>
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true">客户点评</a>
+                        </li>
+           			</ul>
+                    <div class="tab-content">
+                        <div id="tab-1" class="tab-pane active">
+                            <div class="panel-body">
+                                 <div class="feed-activity-list">
+                                     <div class="col-sm-10">
+                                         <div class="ibox ">
+                                             <div class="ibox-content text-center" style="background-color:#ddafa6"> 
+                                                 <h3 class="m-b-xxs" th:text="${projectDetail.name}" style="color:#408080"></h3>
+                                             </div>
+                                         </div>
+                                         <div class="social-body ">
+	                                        <form  id="frm"  class="form-inline" >
+	                                            <input type="hidden" id="projectId" name="projectId" th:value="${projectDetail.id}">
+	                                            <input type="hidden" id="location" name="location" value="2">
+	                                            <input type="hidden" id="parentId" name="parentId" value="0">
+	                                            <div class="media-body ">
+	                                                <textarea style="height:100px;width:1100px;position: relative; left:148px; top: 0px; " name="content" class="form-control" placeholder="填写评论..."></textarea>
+	                                            </div>
+	                                            <div class="form-group" style="position: relative; left:1150px; top: 0px;">
+	                                                <div class="col-sm-8 col-sm-offset-3 pull-right">
+	                                                    <button  class="btn btn-primary" type="submit">提交</button>
+	                                                </div>
+	                                            </div>
+	                                            <br/>
+	                                            <br/>
+	                                        </form>
+	                                    </div>
+	                                    <ul id="loadingList" class="cf">
+                                         <li class="social-feed-separated"  th:each="comment:${commentList}"  id="data-list">
+                                             <div class="social-avatar" th:if="${comment.parentId}==0">
+                                                 <a href="profile.html#" class="pull-left">
+                                                     <img alt="image" class="img-circle" th:src="${comment.createUserPic}">
+                                                 </a>
+                                             </div>
+                                             <div class="social-feed-box" th:if="${comment.parentId}==0">
+                                                 <div class="social-avatar"  th:if="${comment.parentId}==0">
+                                                     <a class="pull-left" th:text="${comment.createUserNickName}">
+                                                     </a>
+                                                     <small class="pull-right" th:text="${#dates.format(comment.createTime, 'yyyy-MM-dd HH:mm:ss')}"></small>
+                                                     <br/>
+                                                 </div>
+                                                 <div class="social-body"  th:if="${comment.parentId}==0">
+                                                     <div class="well content" th:text="${comment.content}">
+                                                     </div>
+                                                     <div class="pull-left">
+                                                         <i class="fa fa-thumbs-up"><span class="small" th:text="${comment.thumbCount}"></span></i>
+                                                     </div>
+                                                     <div class="pull-right">
+                                                         <!-- <button  class="btn btn-xs btn-white"><i class="fa fa-thumbs-up"></i> 赞 </button> -->
+                                                         <button  class="btn btn-xs btn-white" th:onclick=" 'javascript:addcomment('+${comment.id}+')'">评论 </button>
+                                                         <button class="btn btn-xs btn-white" th:onclick=" 'javascript:delcomment('+${comment.id}+')'"><i class="glyphicon glyphicon-trash"></i>删除</button>
+                                                     </div>
+                                                     <br/>
+                                                     <br/>
+                                                 </div>
+                                                 <div th:id="${comment.id}">
+                                                 </div>
+                                                 <div class="social-footer" th:if="${comment.sonCount}>0" th:each="commentList:${comment.commentDtoList}">
+                                                     <div class="social-comment">
+                                                         <a href="" class="pull-left">
+                                                             <img alt="image"  th:src="${commentList.createUserPic}">
+                                                         </a>
+                                                         <div class="media-body">
+                                                             <a class="pull-left" th:text="${comment.createUserNickName}">
+                                                             </a>
+                                                             <small class="pull-right" th:text="${#dates.format(comment.createTime, 'yyyy-MM-dd HH:mm:ss')}"></small>
+                                                             <br/>
+                                                             <br/>
+                                                             <p th:text="${commentList.content}"></p>
+                                                             <div class="pull-left">
+                                                                 <i class="fa fa-thumbs-up"><span class="small"th:text="${commentList.thumbCount}"></span></i>
+                                                             </div>
+                                                             <div class="pull-right">
+                                                                 <!-- <a class="btn btn-xs btn-white "><i class="fa fa-thumbs-up"></i> 赞 </a> -->
+                                                                 <button class="btn btn-xs btn-white" th:onclick=" 'javascript:delcomment('+${commentList.id}+')'"><i class="glyphicon glyphicon-trash"></i>删除</button>
+                                                             </div>
+                                                         </div>
+                                                     </div>
+                                                 </div>
+                                             </div>
+                                        </li></ul><div class="load-more">正在加载...</div>
+                                     </div>
+                                 </div>
+                            </div>
+                        </div>
+					</div>
+				</div>
+			</div>
+		</div>
+<div th:replace="common :: commonjs"></div>	
+<script type="text/javascript" th:inline="javascript">
+			var projectId = [[${projectDetail.id}]];
+			$(document).ready(function () {
+				var loadingModule = (function () {//下拉加载模块
+
+		            var $window = $(window),
+		                $document = $(document),
+		                ajaxNum = 2;
+
+		            //初始化加载条显示
+		            function initBtmBar() {
+		                var listNum = $('#loadingList>li').length;
+		                if(listNum < 8){
+		                	   $('.load-more').html('');
+		                }else{
+		                    $('.load-more').html('正在加载...');
+		                }
+		            }
+
+		            //判断滚动条到达底部
+		            function isBottom() {
+		                if($window.scrollTop() >= $document.height()-$window.height()){
+		                    return true;
+		                }else{
+		                    return false;
+		                }
+		            }
+
+		            //参数为真的时候改写加载更多字体内容
+		            function changeLoadingText(_Boolean) {
+		                if(_Boolean){
+		                    $('.load-more').html('没有更多内容啦!');
+		                }else{
+		                    $('.load-more').html('正在加载...');
+		                }
+		            }
+
+		            //下拉刷新，渲染数据
+		            function ajaxLoading(){
+
+		                $.ajax({
+		                    type:"POST",
+		                    dataType:'json',
+		                    url:"/admin/project/commentList/"+projectId+'/2',
+		                    async:true,
+		                    data:{
+		                        size:6,
+		                        current:ajaxNum
+		                    },
+		                    error:function(request){
+		                        console.log("服务失败！");
+		                    },
+		                    success:function(data){
+		                        ajaxNum += 1;
+		                        //渲染模板
+		                        loadingTempl(data);
+		                        var _Boolean = data.length < 8 ? true:false;
+		                        changeLoadingText(_Boolean);
+		                    }
+		                })
+
+		            }
+
+		            //加载数据
+		            function loadingTempl(data) {
+		            	var html='';
+		            	$.each(data,function(commentIndex,comment){
+		            		html+='<li class="social-feed-separated" id="data-list">'
+		                    +'<div class="social-avatar">'
+		                    +'<a href="profile.html#" class="pull-left">'
+		                    +'<img alt="image" class="img-circle" src="'+comment.createUserPic+'">'
+		                    +'</a></div>'
+		                    +'<div class="social-feed-box">'
+		                    +'<div class="social-avatar" >'
+		                    +'<a class="pull-left">'+comment.createUserNickName+'</a>'
+		                    +'<small class="pull-right">'+changeDateFormat(comment.createTime)+'</small>'
+		                    +'<br/>'
+		                    +'</div>'
+		                    +'<div class="social-body" >'
+		                    +'<div class="well content" >'+comment.content+'</div>'
+		                    +'<div class="pull-left">'
+		                    +' <i class="fa fa-thumbs-up"><span class="small" text="'+comment.thumbCount+'"></span></i>'
+		                            +'</div>'
+		                            +'<div class="pull-right">'
+		                            <!-- <button  class="btn btn-xs btn-white"><i class="fa fa-thumbs-up"></i> 赞 </button> -->
+		                            +'<button  class="btn btn-xs btn-white" onclick="addcomment('+comment.id+')">评论 </button>'
+		                            +'<button class="btn btn-xs btn-white" onclick="delcomment('+comment.id+')"><i class="glyphicon glyphicon-trash"></i>删除</button>'
+		                            +'</div><br/><br/> </div>'
+		                    +'<div id = "'+comment.id+'">'
+		                    +'</div>';
+		                    if(comment['sonCount']>0&&comment['commentDtoList']!=null&&comment['commentDtoList'].length>0){
+		                    	 $.each(comment.commentDtoList,function(index,soncomment){
+		                    		 html+='<div class="social-footer">'
+		                             +'<div class="social-comment">'
+		                             +'<a href="" class="pull-left">'
+		                             +'<img alt="image" src="'+soncomment['createUserPic']+'">'
+		                             +'</a>'
+		                             +'<div class="media-body">'
+		                             +'<a class="pull-left">'+soncomment['createUserNickName']+'</a>'
+		                             +'<small class="pull-right">'+changeDateFormat(soncomment['createTime'])+'</small><br/>'
+		                                         +'<p>'+soncomment['content']+'</p>'
+		                                         +'<div class="pull-left">'
+		                                         +'<i class="fa fa-thumbs-up"><span class="small">'+soncomment['thumbCount']+'</span></i>'
+		                                         +'</div>'
+		                                         +'<div class="pull-right">'
+		                                             <!-- <a class="btn btn-xs btn-white "><i class="fa fa-thumbs-up"></i> 赞 </a> -->
+		                                             +'<button class="btn btn-xs btn-white" onclick="delcomment('+soncomment['id']+')"><i class="glyphicon glyphicon-trash"></i>删除</button>'
+		                                             +'</div></div></div></div>'
+		                    	 })
+		                    	
+		                    }
+		                   
+		                   html+='</div></li>'
+		            	});
+		            	$("#loadingList").append(html);
+		            }
+
+		            //scroll事件
+		            function scrollEvent() {
+		                $window.on('scroll', function () {
+		                    if(isBottom()){
+		                        ajaxLoading();
+		                    }
+		                });
+		            }
+
+		            //阻止冒泡class='pull'
+		            function pullPropagation() {
+		                $('#loadingList').on('click','li .pull',function (event) {
+		                    event.stopPropagation();
+		                })
+		            }
+
+		            //loadingModule启动函数
+		            function loadingStart() {
+		                initBtmBar();
+		                scrollEvent();
+		                pullPropagation();
+		            }
+
+		            return {
+		                changeLoadingText : changeLoadingText,
+		                ajaxLoading : ajaxLoading,
+		                scrollEvent : scrollEvent,
+		                isBottom : isBottom,
+		                initBtmBar : initBtmBar,
+		                loadingStart : loadingStart
+		            };
+		            
+		        })();
+
+		    	loadingModule.loadingStart();
+			    $("#frm").validate({
+				    rules: {
+				      projectId: {
+				    	required: true
+				      },
+				      location: {
+				    	required: true
+				      },
+				      parentId: {
+				    	required: true
+				      },
+				      content: {
+				    	required: true
+				      }
+				    },
+				    messages: {},
+				    submitHandler:function(form){
+				    	$.ajax({
+				    		   type: "POST",
+				    		   dataType: "json",
+				    		   url: "/admin/project/commentpro/add",
+				    		   data: $(form).serialize(),
+				    		   success: function(msg){
+			   	    			self.location.reload();
+				    		   }
+				    		});
+			        }
+				});
+			});
+	
+			function goBack()
+			{
+			window.history.back()
+			}
+			
+		 function aa (commentId){
+		    	var commentIds = commentId+''+projectId;
+		    	var content = $("#"+commentIds).val();
+		    	 if(content == null||content==''){
+		             layer.open({
+		                 type: 0,
+		                 title: '提示',
+		                 shadeClose: true,
+		                 border: [10, 0.8, '#5b0f00',true],
+		                 shade: [0.5, '#000'],
+		                 area: ['150px', '150px'],
+		                 content:'<div align="center">请输入需要评论的内容</div>'
+		             });
+		             return;
+		         }
+		    	 $.ajax({
+		             url:"/admin/project/comment/add",
+		             data:{"projectId":projectId,"location":2,"content":content,"parentId":commentId},
+		             success:function(result){
+		                 window.location.reload();
+		             }
+		         })
+		    }
+			function delcomment(commentId){
+				 layer.confirm('确定删除吗？',{icon:3,title:'提示'},function(index){
+					   $.ajax({
+						   type:"POST",
+						   datatype:"json",
+						   url:"/admin/project/comment/delete/"+commentId,
+						   success:function(msg){
+							   layer.msg(msg.msg, {time: 2000},function(){
+			   	    				self.location.reload();
+			   	    				layer.close(index);
+			   					});
+ 					   		}
+					   });
+				   });
+			}
+		
+			function addcomment(commentId){
+					$("#"+commentId).empty();
+					 var commentIds = commentId+''+projectId;
+					var html = "";
+					html+='<div class="social-footer" style="height:165px"><form  id="'+commentId+'" class="form-inline">'
+					+'<input type="hidden" id="projectId" name="projectId" value="'+projectId+'">'
+					+'<input type="hidden" id="location" name="location" value="2" >'
+					+'<input type="hidden" id="parentId" name="parentId" value="'+commentId+'">'
+					+' <div class="media-body ">'
+					+'<textarea style="height:100px;width:1100px;position: relative; left:45px; top: 0px; " id="'+commentIds+'" name="content" class="form-control" placeholder="填写评论..."></textarea>'
+					+'</div>'
+					+'<div class="form-group pull-right">'
+					+'   <div class="col-sm-8 col-sm-offset-3 pull-right">'
+					+'        <button  class="btn btn-primary" type="button" onclick = aa('+commentId+')>提交</button>'
+					+'   </div>'
+					+'</div>'
+					+'<br/>'
+					+'<br/></form>'
+					$("#"+commentId).html(html)
+			}
+		    
+		
+		function createcomment(commentId,projectId,location){
+		    $("#frm").empty(); //清空内容
+		    var com = '<div class="social-comment">'+
+		    				'<input type="hidden" id="commentId" name="parentId" value="'+commentId+'">'+
+		    				'<input type="hidden" id="projectId" name="projectId" value="'+projectId+'">'+
+		    				'<input type="hidden" id="location" name="location" value="'+location+'">'+
+					      '<div class="media-body">'+
+					             '<textarea name="content" style="height:65px;width:500px" class="form-control" placeholder="填写评论..."></textarea>'+
+					      '</div>'+
+					      '<div class="form-group">'+
+					        '<div class="col-sm-8 col-sm-offset-3">'+
+					            '<button  class="btn btn-primary" type="submit">提交</button>'+
+					        '</div>'+
+					      '</div>'+
+					   '</div>  '+
+					   '<hr/>';
+		    $("#frm").append(com);
+		} 
+		
+	   function changeDateFormat(cellval) {
+	        var dateVal = cellval + "";
+	        if (cellval != null) {
+	            var date = new Date(parseInt(dateVal.replace("/Date(", "").replace(")/", ""), 10));
+	            var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+	            var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+	            
+	            var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+	            var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+	            var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+	            
+	            return date.getFullYear() + "-" + month + "-" + currentDate + " " + hours + ":" + minutes + ":" + seconds;
+	        }
+	    }
+
+</script>
+</body>
+</html>

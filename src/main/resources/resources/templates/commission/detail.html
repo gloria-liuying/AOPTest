@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title> - 数据表格</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+   	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet">
+
+    <!-- Data Tables -->
+    <link th:href="@{/css/plugins/dataTables/dataTables.bootstrap.css}" rel="stylesheet">
+    <link th:href="@{/css/animate.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>详情 <small></small></h5>
+                    </div>
+                    <div class="ibox-content">
+
+                        <table class="table table-striped table-bordered table-hover dataTables-example">
+                            <thead>
+                                <tr>
+							        <th>房间号：</th>
+							        <th>订单id：</th>
+							        <th>销售名称：</th>
+							        <th>支付金额：</th>
+							        <th>类型：</th>
+							        <th>创建时间：</th>
+							        <th>更新时间：</th>
+                                </tr>
+                            </thead>
+                            <tbody id="detailList">
+                                <tr class="gradeU" th:each="detailVo:${detailVo}">
+									<td  th:text="${detailVo.suiteNum}"></td>
+									<td  th:text="${detailVo.orderId}"></td>
+									<td  th:text="${detailVo.saleName}"></td>
+									<td  th:text="${detailVo.amount}"></td>
+									<td  th:text="${detailVo.typeName}"></td>
+									<td  th:text="${detailVo.createTime}"></td>
+									<td  th:text="${detailVo.updateTime}"></td>
+							   </tr>	 
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	<div th:replace="common :: commonjs"></div>
+	<script th:src="@{/js/plugins/jeditable/jquery.jeditable.js}"></script>
+	<script type="text/javascript">
+	$(document).ready(function () {
+        $('.dataTables-example').dataTable();
+
+        /* Init DataTables */
+        var oTable = $('#editable').dataTable();
+
+        /* Apply the jEditable handlers to the table */
+        oTable.$('td').editable('../example_ajax.php', {
+            "callback": function (sValue, y) {
+                var aPos = oTable.fnGetPosition(this);
+                oTable.fnUpdate(sValue, aPos[0], aPos[1]);
+            },
+            "submitdata": function (value, settings) {
+                return {
+                    "row_id": this.parentNode.getAttribute('id'),
+                    "column": oTable.fnGetPosition(this)[2]
+                };
+            },
+
+            "width": "90%",
+            "height": "100%"
+        });
+
+
+    });
+
+    function fnClickAddRow() {
+        $('#editable').dataTable().fnAddData([
+            "Custom row",
+            "New row",
+            "New row",
+            "New row",
+            "New row"]);
+
+    }
+    </script>
+
+</body>

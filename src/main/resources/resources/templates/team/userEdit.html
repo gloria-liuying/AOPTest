@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" th:href="@{/favicon.ico}">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/font-awesome.css}" rel="stylesheet">
+    <link th:href="@{/css/animate.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+	<style type="text/css">
+	input{
+		position:relative; 
+		left:150px;
+	}
+	</style>
+
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+         <div class="row">
+             <div class="col-sm-12">
+                <div class="contact-box">
+                    <a href="profile.html">
+                        <div class="col-sm-4">
+                            <div class="text-center">
+                                <img alt="image" class="m-t-xs img-responsive" th:if="${user.pic}!=null and ${user.pic}!=''" style="height:180px;width:180px;position: relative;left:-13px; top: -4px;  " th:src="${user.pic}">
+                            	<img th:if="${user.pic}==null or ${user.pic}==''" style="height:180px;width:180px;position: relative;left:-36px; top: -1px; " src="http://192.168.2.113:1024/resource/user/headPortraitPic/20180880default.jpg">
+                            </div>
+                        </div>
+                        <div class="col-sm-8">
+                        <br/>
+                            <h3><strong th:text="${user.nickName}"></strong></h3>
+                            <p th:text="${user.address}"><i class="fa fa-map-marker"></i> </p>
+                             <address>
+                            <strong  th:if="${user.email}!=null and ${user.email}!=''" th:text="'E-mail:'+${user.email}"></strong>
+                            <strong  th:if="${user.email}==null or ${user.email}==''">E-mail:</strong><br>
+                            <abbr title="Phone" th:text="'Tel:'+${user.telephone}"></abbr> 
+                        </address> 
+                        </div>
+                        <div class="clearfix"></div>
+                    </a>
+                </div>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>用户岗位</h5>
+                        <a th:if="${isAdmin}"  class= "btn btn-primary btn-xs dropdown-toggle  pull-right" onclick="addRole()"><i class="glyphicon glyphicon-plus">&nbsp;添加岗位</i></a>
+                    </div>
+                    
+                     <div class="ibox-content font-bold" th:each="role:${roles}">
+                    	<br/>
+                         <span th:if="${role.id}!='18 '" th:text="${role.description}"></span>
+                         <span th:if="${role.id}=='18 '" th:text="群主"></span>
+                         <span ><a th:if="${isAdmin}" class= "btn btn-danger dim  pull-right" th:onclick="'javascript:delRole('+${role.id}+')'"><i class="fa fa-trash-o"></i></a> </span>
+                        <br/>
+                        <br/>
+                    </div> 
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <div th:replace="common :: commonjs"></div>
+    <script type="text/javascript" th:inline="javascript">
+    var teamId = [[${teamId}]];
+    var userId = [[${user.id}]];
+	    function delRole(roleId) {
+	    	layer.confirm('确定删除吗？',{icon:3,title:'提示'},function(index){
+	            $.ajax({
+	                type:"GET",
+	                url:"/admin/team/member/out/"+userId+'/'+teamId+'/'+roleId,
+	                success:function(msg){
+	                	layer.msg(msg.msg, {time: 2000},function(){
+	                    window.location.reload();
+	                    parent.$('#table_list').bootstrapTable("refresh");
+	                	});
+	                }
+	            });
+	        });
+	    }
+	    
+	    function addRole(){
+	        layer.open({
+	            type:2,
+	            title:'添加岗位',
+	            maxmin: true,
+	            shadeClose:true,
+	            shade: [0.5, '#000'],
+	            area:['500px','400px'],
+	            content:'/admin/team/member/role/'+teamId+'/'+userId,
+	            end:function(msg){
+	            	 window.location.reload();
+	            	 parent.$('#table_list').bootstrapTable("refresh");
+	            	layer.msg(msg.msg, {time: 2000},function(){
+		            	 var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+	   						parent.layer.close(index);
+	            	});
+	            }
+	        });
+	    }
+    </script>
+
+</body>
+
+</html>

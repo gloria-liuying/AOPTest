@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet">
+    <link th:href="@{/css/animate.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link th:href="@{/css/font-awesome.css}" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>文件下载</h5>
+                    </div>
+                    <div class="ibox-content">
+                    	<div align="center">
+	                     <a type="button" class="btn btn-w-m btn-info btn-lg" th:href="${downUrl}">下载</a> 
+	                    </div>
+	                    <div>
+	                    	<p>备注：<br/>
+	                     	1、模板文件中的第一行数据为格式样例，导入时请删除第一条数据！<br/>
+	                     	2、模板文件中各单元格数据格式请勿修改！<br/>
+	                     	</p>
+	                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <div th:replace="common :: commonjs"></div>
+    <script type="text/javascript" th:inline="javascript">
+    
+    </script>
+
+</body>
+
+</html>

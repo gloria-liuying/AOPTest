@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet">
+    <link th:href="@{/css/animate.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link th:href="@{/css/font-awesome.css}" rel="stylesheet">
+	 <style type="text/css">
+	 .gender,.area,.budget{
+		position:relative; 
+		left:70px;
+	}
+	.sex,.areaname,.budgetname{
+		position:relative; 
+		left:60px;
+	}
+    </style>
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>完整验证表单</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <form class="form-horizontal m-t" id="frm" method="post" action="/admin/customer/update" th:object="${customer}">
+                        	<input id="customerId" name="customerId" type="hidden" th:value="${customer.id}"/>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">客户姓名：</label>
+                                <div class="col-sm-8">
+                                    <input id="name" name="name" class="form-control" type="text"  th:value="${customer.name}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">电话号码：</label>
+                                <div class="col-sm-8">
+                                    <input id="telephone" name="telephone" class="form-control" type="text" 
+                                   		onkeyup="this.value=this.value.replace(/[^\d]/g,'') " 
+                                 		onafterpaste="this.value=this.value.replace(/[^\d]/g,'') " th:value="${customer.telephone}">
+                                </div>
+                            </div>
+	                        <div class="form-group">
+	                            <label class="col-sm-2 control-label sex" >性别： </label>
+	                            <div class="col-sm-10">
+	                                <div class="radio gender">
+	                                    <label>
+	                                        <input type="radio" th:checked="${customer.gender==1}" value=" 1" id="optionsRadios1" name="gender">男</label>
+	                                    <label>
+	                                        <input type="radio" th:checked="${customer.gender==2}" value=" 2"  id="optionsRadios2" name="gender">女</label>
+	                                </div>
+	                            </div>
+	                        </div>
+	                         <div class="form-group">
+                                <label class="col-sm-3 control-label">职业顾问：</label>
+                                <div class="col-sm-8">
+                                  <select name="createUserTel" class="form-control" id="userIds" >
+								  </select>
+                            	</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">客户等级：</label>
+                                <div class="col-sm-4">
+                                    <select name="level" class="form-control" >
+                                		<option value="1" th:selected="${customer.level== 1}">A</option>
+                                		<option value="2" th:selected="${customer.level== 2}">B</option>
+                                		<option value="3" th:selected="${customer.level== 3}">C</option>
+                                		<option value="4" th:selected="${customer.level== 4}">D</option>
+                                		<option value="5" th:selected="${customer.level== 5}">E</option>
+                                	</select>
+                                </div>
+                            </div>
+                             <div class="form-group">
+                                <label class="col-sm-3 control-label">年龄段：</label>
+                                <div class="col-sm-8">
+                                    <select name="age" class="form-control" >
+                                		<option value="1" th:selected="${customer.age== 1}">20-30岁</option>
+                                		<option value="2" th:selected="${customer.age== 2}">30-40岁</option>
+                                		<option value="3" th:selected="${customer.age== 3}">40-50岁</option>
+                                		<option value="4" th:selected="${customer.age== 4}">50以上</option>
+                                	</select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+	                                <label class="col-sm-3 control-label">居住地址：</label>
+	                                <div class="col-sm-8">
+	                                    <input id="areaAddress" name="areaAddress" class="form-control" type="text" th:value="${customer.areaAddress}">
+	                                </div>
+	                            </div>
+	                            <div class="form-group">
+	                            <label class="col-sm-3 control-label">介绍人：</label>
+	                            <div class="col-sm-8">
+	                                <input id="introducerUser" name="introducerUser" class="form-control" type="text" th:value="${customer.introducerUser}">
+	                            </div>
+	                        </div>
+                            <div class="form-group">
+	                            <label class="col-sm-2 control-label budgetname"  >意向总价(元/m²):</label>
+	                            <div class="col-sm-8">
+	                                <div class="row" >
+	                                    <div class="col-sm-5 budget">
+	                                        <input class="form-control" name="budgetLowerLimit" onkeyup="this.value=this.value.replace(/[^\d]/g,'') " 
+                                 			onafterpaste="this.value=this.value.replace(/[^\d]/g,'') "
+	                                        placeholder="总价下限" type="text" th:value="${customer.budgetLowerLimit}"
+									    ></div>
+	                                    <div class="col-sm-1 budget">
+	                                        <p>——</p>
+	                                    </div>
+	                                    <div class="col-sm-5 budget">
+	                                        <input class="form-control " name="budgetLowerLimit" onkeyup="this.value=this.value.replace(/[^\d]/g,'') " 
+                                 			onafterpaste="this.value=this.value.replace(/[^\d]/g,'') "
+	                                        placeholder="总价下限" type="text" 
+										    th:value="${customer.budgetUpperLimit}"
+										    >
+	                                    </div>
+	                                </div>
+	                            </div>
+	                         </div>
+	                         <div class="form-group">
+	                            <label class="col-sm-2 control-label areaname areaname">意向面积(m²):</label>
+	                            <div class="col-sm-8">
+	                                <div class="row">
+	                                    <div class="col-sm-5 area">
+	                                        <input id ="area1" name="areaLowerLimit" onkeyup="this.value=this.value.replace(/[^\d]/g,'') " 
+                                 			onafterpaste="this.value=this.value.replace(/[^\d]/g,'') "
+	                                        class="form-control" type="text" placeholder="面积下限" th:value="${customer.areaLowerLimit}" >
+	                                    </div>
+	                                    <div class="col-sm-1 area">
+	                                        <p>——</p>
+	                                    </div>
+	                                    <div class="col-sm-5 area">
+	                                        <input id = "area2" name="areaUpperLimit" onkeyup="this.value=this.value.replace(/[^\d]/g,'') " 
+                                 			onafterpaste="this.value=this.value.replace(/[^\d]/g,'') "
+	                                        class="form-control" type="text" placeholder="面积上限" th:value="${customer.areaUpperLimit}">
+	                                    </div>
+	                                </div>
+	                            </div>
+	                          </div> 
+                              <div class="form-group">
+                                <label class="col-sm-3 control-label">职业：</label>
+                                <div class="col-sm-8">
+                                    <select name="dctProfession" class="form-control" >
+                                		<option value="17" th:selected="${customer.dctProfession== 17}">科研教育</option>
+                                		<option value="18" th:selected="${customer.dctProfession== 18}">公务员</option>
+                                		<option value="19" th:selected="${customer.dctProfession== 19}">医疗卫生</option>
+                                		<option value="20" th:selected="${customer.dctProfession== 20}">金融</option>
+                                		<option value="21" th:selected="${customer.dctProfession== 21}">IT</option>
+                                		<option value="22" th:selected="${customer.dctProfession== 22}">个体私营</option>
+                                		<option value="23" th:selected="${customer.dctProfession== 23}">国营企单位</option>
+                                		<option value="24" th:selected="${customer.dctProfession== 24}">其他</option>
+                                	</select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+	                            <label class="col-sm-3 control-label">购房用途：</label>
+	                            <div class="col-sm-8">
+	                                <select name="dctActualHouseUsed" class="form-control" >
+	                                    <option value="结婚住房" th:selected="${customer.dctActualHouseUsed== 11}">结婚住房</option>
+	                                    <option value="自住" th:selected="${customer.dctActualHouseUsed== 12}">自住</option>
+	                                    <option value="父母养老" th:selected="${customer.dctActualHouseUsed== 13}">父母养老</option>
+	                                    <option value="为子女购置" th:selected="${customer.dctActualHouseUsed== 14}">为子女购置</option>
+	                                    <option value="投资" th:selected="${customer.dctActualHouseUsed== 15}">投资</option>
+	                                </select>
+	                            </div>
+	                        </div>
+	                        <div class="form-group">
+	                            <label class="col-sm-3 control-label">信息来源：</label>
+	                            <div class="col-sm-8">
+	                                <select name="dctInformationSource" class="form-control" >
+	                                    <option value="置业顾问" th:selected="${customer.dctInformationSource== 2}">置业顾问</option>
+	                                    <option value="安居客" th:selected="${customer.dctInformationSource== 3}">安居客</option>
+	                                    <option value="房天下" th:selected="${customer.dctInformationSource== 4}">房天下</option>
+	                                    <option value="广告" th:selected="${customer.dctInformationSource== 5}">广告</option>
+	                                    <option value="宣传车" th:selected="${customer.dctInformationSource== 6}">宣传车</option>
+	                                    <option value="朋友介绍" th:selected="${customer.dctInformationSource== 7}">朋友介绍</option>
+	                                    <option value="路过" th:selected="${customer.dctInformationSource== 8}">路过</option>
+	                                    <option value="其他途径" th:selected="${customer.dctInformationSource== 9}">其他途径</option>
+	                                </select>
+	                            </div>
+	                        </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">意向程度：</label>
+                                <div class="col-sm-4">
+                                    <select name="intentionDegree" class="form-control" >
+                                		<option value="1" th:selected="${customer.intentionDegree== 1}">A</option>
+                                		<option value="2" th:selected="${customer.intentionDegree== 2}">B</option>
+                                		<option value="3" th:selected="${customer.intentionDegree== 3}">C</option>
+                                		<option value="4" th:selected="${customer.intentionDegree== 4}">D</option>
+                                	</select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">成交状态：</label>
+                                <div class="col-sm-4">
+                                    <select name="dealState" class="form-control" >
+                                		<option value="1" th:selected="${customer.dealState== 1}">已成交</option>
+                                		<option value="2" th:selected="${customer.dealState== 2}">未成交</option>
+                                	</select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-3">
+                                    <button class="btn btn-primary" type="submit">提交</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <div th:replace="common :: commonjs"></div>
+    <script type="text/javascript" th:inline="javascript">
+    var customer = [[${customer}]];
+    var createUserTel = [[${createUserTel}]];
+    var customerId = customer.id;
+    $(document).ready(function () {
+	    $("#frm").validate({
+    	    rules: {
+	    	    	customerId:{
+	   	    		required: true,
+	       	        minlength: 1,
+	       	    	maxlength: 30,
+	       	    	visible: false
+	    	    	 },
+	    	    	name: {
+	    	        required: true,
+	    	        minlength: 1,
+	    	    	maxlength: 30
+	    	      },
+	    	      telephone: {
+	    	        required: true,
+	    	        minlength: 1,
+	    	    	maxlength: 16
+	    	      },
+	    	      gender: {
+	                  required: true,
+	                  minlength: 1,
+	                  maxlength: 16
+	              },
+	              createUserTel: {
+	                  required: true,
+	                  minlength: 1,
+	                  maxlength: 16
+	              },
+	    	      level: {
+	    	        required: true
+	    	      },
+	    	      age: {
+	      	        required: true
+	      	      },
+	      	   	  areaAddress: {
+	    	        required: true
+	    	      },
+	    	      areaLowerLimit: {
+	                  required: false
+	              },
+	              areaUpperLimit: {
+	                  required: false
+	              },
+	              budgetLowerLimit: {
+	                  required: false
+	              },
+	              budgetUpperLimit: {
+	                  required: false
+	              },
+	    	      dctProfession: {
+	    	        required: false
+	    	      },
+	    	      dctInformationSource: {
+	                  required: false
+	              },
+	              dctActualHouseUsed: {
+	                  required: false
+	              },
+	    	      intentionDegree: {
+	    	        required: false
+	    	      },
+	    	      dealState: {
+	    	        required: false
+	    	      }
+	    	    },
+	    	    messages: {},
+	    	    submitHandler:function(form){
+	    	    	$.ajax({
+	   	    		   type: "POST",
+	   	    		   dataType: "json",
+	   	    		   url: "/admin/customer/update",
+	   	    		   data: $(form).serialize(),
+	   	    		   success: function(msg){
+		   	    			layer.msg(msg.msg, {time: 2000},function(){
+		   						var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+		   						parent.layer.close(index);
+		   					});
+	   	    		   }
+	   	    		});
+	            }
+		    });
+	    
+	    $.getJSON("/admin/customer/mine/createuser",{customerId:customerId}, function(json){
+	    	  var result = json.data;
+	    	  $("#userIds").empty(); //清空内容
+	    	var opt = "";
+	    	  for(var i = 0;i < result.length;i++){
+	    		  var select = "";
+	    		  if(result[i].telephone == createUserTel){
+	    			  select = "selected = 'selected'";
+	    		  }
+	    		opt += '<option value = "'+result[i].telephone+'"'+select+'>'+result[i].nickName+'</option>'
+	    	  }
+	    	  $("#userIds").append(opt);
+	    	});
+	    
+    })
+    </script>
+
+</body>
+
+</html>

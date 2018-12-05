@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body th:fragment="sidebar">
+
+	<!--左侧导航开始-->
+	<nav class="navbar-default navbar-static-side" role="navigation">
+		<div class="nav-close">
+			<i class="fa fa-times-circle"></i>
+		</div>
+		<div class="sidebar-collapse">
+			<ul class="nav" id="side-menu">
+				<li class="nav-header">
+					<div class="dropdown profile-element">
+						<a data-toggle="dropdown" class="dropdown-toggle" href="#"> <span
+							class="clear"> <span class="block m-t-xs"
+								style="font-size: 20px;"> <i class="fa fa-area-chart"></i>
+									<strong class="font-bold">成功购房</strong>
+							</span>
+						</span>
+						</a>
+					</div>
+					<div class="logo-element">成功购房</div>
+				</li>
+				<li>
+				<a th:href="@{/index}">
+				 <i class="fa fa-home"></i> <span
+						class="nav-label">首页</span>
+				</a></li>
+				<li th:if="${session.user.isSuper()}"><a href="#">
+				 <i class="fa fa-cogs"></i> <span
+						class="nav-label">系统管理</span> <span class="fa arrow"></span>
+				</a>
+					<ul class="nav nav-second-level " >
+						<li><a class="J_menuItem" th:href="@{/role}">角色管理</a>
+						</li>
+						<li><a class="J_menuItem" th:href="@{/user}">人员管理</a>
+						</li>
+					    <!-- <li><a class="J_menuItem" th:href="@{/resource}">权限管理</a>
+						</li>  -->
+					</ul></li>
+					
+			 		<li><a href="#"> <i class="glyphicon glyphicon-folder-close"></i> <span
+						class="nav-label">项目管理</span> <span class="fa arrow"></span>
+				</a>
+					<ul class="nav nav-second-level">
+						<li><a class="J_menuItem" th:href="@{/project}" >项目列表</a>
+						</li>
+					</ul></li> 
+					
+			 	<li><a href="#">
+			 	 <i class="glyphicon glyphicon-user"></i> <span
+						class="nav-label">团队管理</span> <span class="fa arrow"></span>
+				</a>
+					<ul class="nav nav-second-level">
+						<li><a class="J_menuItem" th:href="@{/team/index}" >团队列表</a>
+						</li>
+					</ul></li>
+					
+			 	<li ><a href="#">
+			 	  <i class="fa fa-certificate"></i> <span
+						class="nav-label">流程管理</span> <span class="fa arrow"></span>
+				</a>
+					<ul class="nav nav-second-level">
+						<li><a class="J_menuItem" th:href="@{/pledg}" >认筹列表</a>
+						</li>
+						<li><a class="J_menuItem" th:href="@{/subscribe}" >认购列表</a>
+						</li>
+						<li><a class="J_menuItem" th:href="@{/contract}" >签合同列表</a>
+						</li>
+						<li><a class="J_menuItem" th:href="@{/process}" >流程列表</a>
+						</li>
+					</ul></li>
+					
+			 	<li th:if="${session.user.isSuper()}"><a href="#">
+			 	 <i class="fa fa-save"></i> <span
+						class="nav-label">版本管理</span> <span class="fa arrow"></span>
+				</a>
+					<ul class="nav nav-second-level">
+						<li><a class="J_menuItem" th:href="@{/version}" >版本</a>
+						</li>
+					</ul></li>
+					
+				<li><a href="#"> <i class="glyphicon glyphicon-folder-open"></i> <span
+						class="nav-label">资源管理</span> <span class="fa arrow"></span>
+				</a>
+					<ul class="nav nav-second-level">
+						<li><a class="J_menuItem" th:href="@{/house}" >房源管理</a>
+						</li>
+						<li><a class="J_menuItem" th:href="@{/customer}" >客户管理</a>
+						</li>
+						<li><a class="J_menuItem" th:href="@{/order}" >订单管理</a>
+						</li>
+						<li><a class="J_menuItem" th:href="@{/commission}" >佣金管理</a>
+						</li>
+					</ul></li>
+			</ul>
+		</div>
+	</nav>
+</body>
+</html>

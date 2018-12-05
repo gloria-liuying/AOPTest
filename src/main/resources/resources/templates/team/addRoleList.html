@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title> - 数据表格</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet">
+    <link th:href="@{/css/animate.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link th:href="@{/css/font-awesome.css}" rel="stylesheet">
+    <style type="text/css">
+    	.roledes{
+		position:relative; 
+		left:400px;
+    </style>
+</head>
+<body class="gray-bg" >
+ <div class="wrapper wrapper-content animated fadeInRight">
+      <div class="row">
+          <div class="col-sm-12">
+              	<br/>
+                  <form class="form-horizontal " id="frm" method="post">
+                  	 	<input type="hidden" id="teamId" name="teamId" th:value="${teamId}">
+	                    <input type="hidden" id="userList" name="userIds" value="">
+                 	    <div class="ibox float-e-margins">
+	                   	   <div class="ibox-content font-bold" th:each="role:${roleList}">
+	                         <input class="roledes" type="checkbox" name="roleIds" th:value="${role.id}" th:text="${role.description}"></input>
+	                   </div> 
+                        </div>
+                   <span><input class= "btn btn-primary dim pull-right" type="submit" /></span>
+                  </form>
+              </div>
+          </div>
+      </div>
+     <!-- 全局js -->
+    <div th:replace="common :: commonjs"></div>
+    <script type="text/javascript" th:inline="javascript">
+    			$(document).ready(function () {
+    				var select = parent.$("#table_list").bootstrapTable('getSelections');
+    				var userIds = new Array();
+    				$.each(select, function(index,element){
+    					var id = element.id
+    					userIds.push(id);
+    				})
+    				$("#userList").attr("value",userIds)
+    				 $("#frm").validate({
+     		    	    rules: {
+     		    	    	teamId: {
+     		    	        required: true,
+     		    	        minlength: 1,
+     		    	    	maxlength: 30
+     		    	      },
+     		    	     	userIds: {
+     		    	        required: true,
+     		    	        minlength: 1,
+     		    	    	maxlength: 30
+     		    	      },
+     		    	      	roleIds: {
+     		    	        required: true,
+     		    	        minlength: 1,
+     		    	    	maxlength: 30
+     		    	      }
+     		    	    },
+     		    	    messages: {},
+     		    	    submitHandler:function(form){
+     		    	    	$.ajax({
+     		   	    		   type: "POST",
+     		   	    		   dataType: "json",
+     		   	    		   url: "/admin/team/update/role",
+     		   	    		   data: $(form).serialize(),
+     		   	    		   success: function(msg){
+     			   	    			layer.msg(msg.msg, {time: 2000},function(){
+     			   						var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+     			   						parent.layer.close(index);
+     			   					});
+     			   	    		parent.$("#table_list").bootstrapTable("refresh");
+     		   	    		   }
+     		   	    		});
+     		            }
+     		    	});
+    			});
+    		    </script>
+
+</body>
+
+</html>

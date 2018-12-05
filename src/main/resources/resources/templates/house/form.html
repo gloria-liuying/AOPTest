@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet">
+    <link th:href="@{/css/animate.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link th:href="@{/css/font-awesome.css}" rel="stylesheet">
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>完整验证表单</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <form class="form-horizontal m-t" id="frm" method="post" action="/admin/house/update" th:object="${suite}">
+                        	<input type="hidden" id="id" name="id" th:value="${suite.id}">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">项目名称：</label>
+                                <div class="col-sm-8">
+                                    <select name="projectId" class="form-control" id="projectIds" 
+                                    onchange="getProjectId(this.options[this.options.selectedIndex].value)">
+                                	</select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">楼栋号：</label>
+                                <div class="col-sm-8">
+                                    <input id="houseNum" onkeyup="this.value=this.value.replace(/[^\d]/g,'') " 
+                                 onafterpaste="this.value=this.value.replace(/[^\d]/g,'') " name="houseNum" class="form-control" type="text" th:value="${suite.houseNum}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">单元号：</label>
+                                <div class="col-sm-8">
+                                    <input id="houseUnitNum" onkeyup="this.value=this.value.replace(/[^\d]/g,'') " 
+                                 onafterpaste="this.value=this.value.replace(/[^\d]/g,'') " name="houseUnitNum" class="form-control" type="text"  th:value="${suite.houseUnitNum}">
+                                </div>
+                            </div>
+                             <div class="form-group">
+                                <label class="col-sm-3 control-label">房间号：</label>
+                                <div class="col-sm-8">
+                                    <input id="suiteNum" onkeyup="this.value=this.value.replace(/[^\d]/g,'') " 
+                                 onafterpaste="this.value=this.value.replace(/[^\d]/g,'') " name="suiteNum" class="form-control" type="text" th:value="${suite.suiteNum}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">楼层：</label>
+                                <div class="col-sm-8">
+                                    <input id="floorNum" onkeyup="this.value=this.value.replace(/[^\d]/g,'') " 
+                                 onafterpaste="this.value=this.value.replace(/[^\d]/g,'') " name="floorNum" class="form-control" type="text" th:value="${suite.floorNum}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">朝向：</label>
+                                <div class="col-sm-8">
+                                	<select name="faceDirection" class="form-control" >
+                                		<option value="1" th:selected="${suite.faceDirection== 1}">南北</option>
+                                		<option value="2" th:selected="${suite.faceDirection== 2}">东西</option>
+                                	</select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">面积：</label>
+                                <div class="col-sm-8">
+                                    <input id="area" onkeyup="this.value=this.value.replace(/[^\d]/g,'') " 
+                                 onafterpaste="this.value=this.value.replace(/[^\d]/g,'') " name="area" class="form-control" type="text" th:value="${suite.area}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">单价：</label>
+                                <div class="col-sm-8">
+                                    <input id="unitPrice" onkeyup="this.value=this.value.replace(/[^\d]/g,'') " 
+                                 onafterpaste="this.value=this.value.replace(/[^\d]/g,'') " name="unitPrice" class="form-control" type="text" th:value="${suite.unitPrice}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">户型：</label>
+                                <div class="col-sm-8">
+                                     <select name="houseTypeId" class="form-control" id="houseTypeId" 
+                                     th:value="${suite.houseTypeId}">
+                                	</select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">用途：</label>
+                             <div class="col-sm-8">
+                                	<select name="estateUsed" class="form-control" >
+                                		<option value="1" th:selected="${suite.estateUsed ==1}">住宅</option>
+                                		<option value="2" th:selected="${suite.estateUsed ==2}">商用</option>
+                                		<option value="3" th:selected="${suite.estateUsed ==3}">商住两用</option>
+                                	</select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">状态：</label>
+                                <div class="col-sm-8">
+                                	<select name="state" class="form-control">
+                                		<option value="1" th:selected="${suite.state ==1}">在建</option>
+                                		<option value="2" th:selected="${suite.state ==2}">待售</option>
+                                		<option value="3" th:selected="${suite.state ==3}">在售</option>
+                                		<option value="4" th:selected="${suite.state ==4}">在单</option>
+                                		<option value="5" th:selected="${suite.state ==5}">售馨</option>
+                                	</select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">备注：</label>
+                                <div class="col-sm-8">
+                                    <input id="notes" name="notes" class="form-control" th:value="${suite.notes}">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-8 col-sm-offset-3">
+                                    <button class="btn btn-primary" type="submit">提交</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <div th:replace="common :: commonjs"></div>
+    <script type="text/javascript" th:inline="javascript">
+    var suite = [[${suite}]];
+    $(document).ready(function () {
+	    $("#frm").validate({
+    	    rules: {
+    	    	houseNum: {
+    	        required: true,
+    	        minlength: 1,
+    	    	maxlength: 30
+    	      },
+    	      houseUnitNum: {
+    	        required: true,
+    	        minlength: 1,
+    	    	maxlength: 30
+    	      },
+    	      suiteNum: {
+    	        required: true
+    	      },
+    	      houseTypeName: {
+      	        required: true
+      	      },
+    	      area: {
+    	        required: true
+    	      },
+    	      unitPrice: {
+    	        required: true
+    	      },
+    	      status: {
+    	        required: true
+    	      }
+    	    },
+    	    messages: {},
+    	    submitHandler:function(form){
+    	    	$.ajax({
+   	    		   type: "POST",
+   	    		   dataType: "json",
+   	    		   url: "/admin/house/update",
+   	    		   data: $(form).serialize(),
+   	    		   success: function(msg){
+	   	    			layer.msg(msg.message, {time: 2000},function(){
+	   						var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+	   						parent.layer.close(index);
+	   					});
+   	    		   }
+   	    		});
+            }
+    	});
+	    $.getJSON("/admin/house/project/all", function(json){
+	    	  var result = json.data;
+	    	  $("#projectIds").empty(); //清空内容
+	    	  var opt = "";
+	    	  for(var i = 0;i < result.length;i++){
+	    		  var select = "";
+	    		  if(result[i].id == suite.projectId){
+	    			  select = "selected = 'selected'";
+	    		  } 
+	    		  opt += '<option value = "'+result[i].id+'" '+select+'>'+result[i].name+'</option>'
+	    	  }
+	    	  $("#projectIds").append(opt);
+	    	  var value = $("#projectIds").val();
+	    	  getProjectId(value);
+	    	});
+	    
+   	 });
+    
+    
+    function getProjectId(id){
+    	 $.getJSON("/admin/house/types",{projectId:id}, function(json){
+	    	  var result = json.data;
+	    	  $("#houseTypeId").empty(); //清空内容
+	    	  var opt = "";
+	    	  for(var i = 0;i < result.length;i++){
+	    		  var select = "";
+	    		  if(result[i].id == suite.houseTypeId){
+	    			  select = "selected = 'selected'";
+	    		  } 
+	    		  opt += '<option value = "'+result[i].id+'" '+select+'>'+result[i].name+'</option>'
+	    	  }
+	    	  $("#houseTypeId").append(opt);
+	    	});
+    }
+    
+    
+    </script>
+
+</body>
+
+</html>

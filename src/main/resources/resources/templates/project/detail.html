@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>- 数据表格</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/font-awesome.min.css}" rel="stylesheet">
+    <link th:href="@{/css/animate.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link th:href="@{/js/plugins/fancybox/jquery.fancybox.css}" rel="stylesheet">
+    <link th:href="@{/css/plugins/blueimp/css/blueimp-gallery.min.css}" rel="stylesheet">
+
+    <style type="text/css">
+        .projectcon{
+            padding-top: 5px;
+            padding-bottom: 15px;
+            border-bottom:1px solid #e5e5e5;
+            font-size: 25px;
+            color: #0170cc;
+            margin-bottom: 5px;
+            font-weight: normal;
+            line-height: 25px;
+        }
+    </style>
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="m-b-md">
+                            	<button class= "btn btn-white btn-xs  pull-right" onclick="goBack()">
+                                    <i class="fa fa-exchange"></i>&nbsp;返回</button>
+                                <button th:if="${isAdmin}" class="btn btn-white btn-xs pull-right" type="button" onclick="edit()">
+                                    <i class="fa fa-edit"></i>&nbsp;编辑项目</button>
+                                <h2 class="projectcon" th:text="${projectDetail.name}"></h2>
+                                <input type="hidden" id="pid" name="pid" th:value="${projectDetail.id}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <dl class="dl-horizontal">
+                                <dt>状态：</dt>
+                                <dd>
+                                    <p class="label label-primary"
+                                       th:if="${projectDetail.state}==1">在建</p>
+                                    <p class="label label-primary"
+                                       th:if="${projectDetail.state}==2">在售</p>
+                                    <p class="label label-primary"
+                                       th:if="${projectDetail.state}==3">售馨</p>
+                                </dd>
+                                <dt>均价：</dt>
+                                <dd th:text="${projectDetail.averagePrice}"></dd>
+                                <dt>开盘时间：</dt>
+                               <dd th:text="${openDate}">
+                                <dt>是否发布：</dt>
+                                <dd th:if="${projectDetail.publishedFlag}">是</dd>
+                                <dd th:if="${not projectDetail.publishedFlag}">否</dd>
+                                <dt>电话：</dt>
+                                <dd th:text="${projectDetail.telephone}"></dd>
+                                <dt>地址：</dt>
+                                <dd th:text="${projectDetail.address}"></dd>
+                                <br/>
+                            </dl>
+                        </div>
+                       <div class="col-sm-7" id="cluster_info">
+                            <dl class="dl-horizontal">
+
+                                <dt>详细地址:</dt>
+                                <dd><a
+                                        th:href="@{'http://map.baidu.com/?latlng='+${projectDetail.lat}+','+${projectDetail.lng}+'&title=%E6%88%91%E7%9A%84%E4%BD%8D%E7%BD%AE&content='+${projectDetail.address}+'&autoOpen=true&l'}">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-default " type="button"><i class="fa fa-map-marker"></i>&nbsp;&nbsp;百度地图</button>
+                                </a></dd>
+                                <br/>
+                                <dt>团队成员:</dt>
+                                <dd class="team-members" >
+			                        	<span th:each="user:${userMember}">
+				                            <a href="#">
+				                            	<img th:title="${user.nickName}" class="img-circle" th:if="${user.pic}=='' or ${user.pic}==null" src="http://192.168.2.113:1024/resource/user/headPortraitPic/20180880default.jpg">
+				                            	<img th:title="${user.nickName}" class="img-circle" th:if="${user.pic}!='' and ${user.pic}!=null" th:src="@{${user.pic}}">
+				                            </a>
+			                            </span>
+                                </dd>
+                                <dt>团队详情:</dt>
+                                <dd>
+                                  <a class="btn btn-default" th:href="@{'/team/detail/'+${teamId}}">团队信息</a></dd>
+                             </dl>
+                        </div>
+                    </div>
+                    <br/>
+                    <br/>
+                    <div class="row">
+                        <div class="col-sm-10">
+                            <div >
+                                &nbsp;&nbsp;&nbsp;&nbsp; <a th:href="@{'/project/comment/'+${projectDetail.id}+'/1'}"><i class="fa fa-circle text-warning"></i>  项目动态</a>
+                                <a class=" pull-right" th:href="@{'/project/comment/'+${projectDetail.id}+'/1'}"><i class=" pull-right"></i>  更多动态&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</a>
+                            </div>
+                            <div class="ibox-content">
+                                <div>
+                                    <div class="feed-activity-list" id="proComment">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <br/>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <dt>
+                                <ul class="category-list" style="padding: 0">
+                                    <li>
+                                        <a th:href="@{'/project/get/introducePic/'+${projectDetail.id}}"> <i class="fa fa-circle text-navy"></i> 小区介绍图</a>
+                                    </li>
+                                </ul>
+                            </dt>
+                            <ul >
+                                <div class="lightBoxGallery">
+                                    <span th:each="proPic:${proPic}">
+									<input th:if="${proPic.type}==1" type="hidden" name="" th:value="${proPic.id}">
+		                            <a th:if="${proPic.type}==1" th:href="@{${proPic.picUrl}}" title="户型图" data-gallery="">
+		                            	<img alt="image" height="180" width="180" th:if="${proPic.type}==1" th:src="@{${proPic.picUrl}}">
+		                            </a>
+		                            <a class= "btn btn-white btn-xs" th:id="'intr'+${proPic.id}" th:if="${proPic.type}==1" th:onclick=" 'javascript:delIntroducePic('+${proPic.id}+')'"><i class="fa fa-trash-o"></i>
+		                            </a>
+		                            </span>
+                                    <div id="blueimp-gallery" class="blueimp-gallery">
+                                        <div class="slides"></div>
+                                        <h3 class="title"></h3>
+                                        <a class="prev">‹</a>
+                                        <a class="next">›</a>
+                                        <a class="close">×</a>
+                                        <a class="play-pause"></a>
+                                        <ol class="indicator"></ol>
+                                    </div>
+                                </div>
+                            </ul>
+                        </div>
+                    </div>
+                   <div class="row">
+                        <div class="col-sm-12">
+                            <dt>
+                                <ul class="category-list" style="padding: 0">
+                                    <li>
+                                        <a th:href="@{'/project/get/houseTypePic/'+${projectDetail.id}}"> <i class="fa fa-circle text-danger"></i> 户型图</a>
+                                    </li>
+                                    <li>
+                                    </li>
+                                </ul>
+                            </dt>
+                            <ul>
+                                <div class="lightBoxGallery">
+                                    <span th:each="proPic:${proPic}">
+								<input th:if="${proPic.type}==2" type="hidden" name="" th:value="${proPic.id}">
+	                            <a th:if="${proPic.type}==2" th:href="@{${proPic.picUrl}}" title="小区介绍图" data-gallery="">
+	                            	<img alt="image" height="180" width="180" th:if="${proPic.type}==2" th:src="@{${proPic.picUrl}}">
+	                            </a>
+	                            <a class= "btn btn-white btn-xs" th:id="'intr'+${proPic.id}" th:if="${proPic.type}==2" th:onclick=" 'javascript:delIntroducePic('+${proPic.id}+')'"><i class="fa fa-trash-o"></i></a>
+ 								</span>
+                                    <div id="blueimp-gallery" class="blueimp-gallery">
+                                        <div class="slides"></div>
+                                        <h3 class="title"></h3>
+                                        <a class="prev">‹</a>
+                                        <a class="next">›</a>
+                                        <a class="close">×</a>
+                                        <a class="play-pause"></a>
+                                        <ol class="indicator"></ol>
+                                    </div>
+                                </div>
+                            </ul>
+                        </div>
+                    </div>
+                	 <div class="row">
+                        <div class="col-sm-8 ">
+                            <dl class="dl-horizontal">
+	                            <dt>
+	                                <ul class="category-list" style="padding: 0">
+	                                    <li>
+	                                        <a class="pull-left"> <i class="fa fa-circle text-danger"></i> 更多信息</a>
+	                                    </li>
+	                                </ul>
+	                            </dt>
+	                            <dd></dd>
+                          			<dt>交房时间</dt>
+                          			<dd th:text="${deDate}"></dd>
+						            <dt>预售许可证</dt>
+						            <dd th:text="${proMoreInfo.presaleLicense}"></dd>
+						            <dt>建筑类型</dt>
+						            <dd th:text="${proMoreInfo.buildingType}"></dd>
+						            <dt>占地面积</dt>
+						            <dd th:text="${proMoreInfo.floorArea}"></dd>
+						            <dt>建筑面积</dt>
+									<dd th:text="${proMoreInfo.buildingArea}"></dd>
+						            <dt>开发商</dt>
+						            <dd th:text="${proMoreInfo.developerCompany}"></dd>
+						            <dt>产权年限</dt>
+						            <dd th:text="${proMoreInfo.propertyYears}"></dd>
+						            <dt>容积率</dt>
+						            <dd th:text="${proMoreInfo.volumeRate}"></dd>
+						            <dt>绿化率</dt>
+						            <dd th:text="${proMoreInfo.greeningRate}"></dd>
+						            <dt>物业费，单位（元/平米/月）</dt>
+						            <dd th:text="${proMoreInfo.propertyCosts}"></dd>
+						            <dt>物业公司</dt>
+						            <dd th:text="${proMoreInfo.propertyCompany}"></dd>
+						            <dt>车位比</dt>
+						            <dd th:text="${proMoreInfo.parkingRate}"></dd>
+                           </dl>
+                       </div>
+                       <div class="row">
+                        <div class="col-sm-10">
+                            <div >
+                                &nbsp;&nbsp;&nbsp;&nbsp; <a th:href="@{'/project/comment2/'+${projectDetail.id}+'/2'}"><i class="fa fa-circle text-primary"></i>  客户点评</a>
+                                <a class=" pull-right" th:href="@{'/project/comment2/'+${projectDetail.id}+'/2'}"><i class=" pull-right"></i>  更多评论&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</a>
+                            </div>
+                            <div class="ibox-content">
+                                <div>
+                                    <div class="feed-activity-list" id="cusComment">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <br/>
+                </div> 
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+<div th:replace="common :: commonjs"></div>
+<script th:src="@{/js/plugins/dataTables/dataTables.bootstrap.js}"></script>
+<script th:src="@{/js/plugins/peity/jquery.peity.min.js}"></script>
+<script th:src="@{/js/plugins/fancybox/jquery.fancybox.js}"></script>
+<script th:src="@{/js/plugins/blueimp/jquery.blueimp-gallery.min.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+    var proPic =[[${proPic}]] ;
+    var pid = [[${projectDetail.id}]];
+    $(document).ready(function () {
+
+        $('.fancybox').fancybox({
+            openEffect: 'none',
+            closeEffect: 'none'
+        });
+    });
+    function goBack()
+    {
+        window.history.back()
+    }
+    function changeDateFormat(cellval) {
+        var dateVal = cellval + "";
+        if (cellval != null) {
+            var date = new Date(parseInt(dateVal.replace("/Date(", "").replace(")/", ""), 10));
+            var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+            var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+
+            var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+            var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+            var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+            return date.getFullYear() + "-" + month + "-" + currentDate + " " + hours + ":" + minutes + ":" + seconds;
+        }
+    }
+
+
+    function edit(){
+        var id = $("#pid").val();
+        layer.open({
+            type:2,
+            title:'项目修改',
+            maxmin: true,
+            shadeClose:true,
+            shade: [0.5, '#000'],
+            area:['950px','800px'],
+            content:'/admin/project/edit/'+id,
+            end:function(index){
+                $('#table_list').bootstrapTable("refresh");
+            }
+        });
+    }
+
+
+    proPic.forEach(function(e){
+        var id = "intr"+e.id;
+        document.getElementById(id).style.position="relative";
+        document.getElementById(id).style.top="76px";
+        document.getElementById(id).style.left="-30px";
+    });
+
+    function del(id){
+        layer.confirm('确定删除吗？',{icon:3,title:'提示'},function(index){
+            $.ajax({
+                type:"POST",
+                datatype:"json",
+                url:"/admin/project/manager/delete/"+id+'/'+pid,
+                success:function(msg){
+                    window.location.reload();
+                }
+            });
+        });
+    }
+    function delIntroducePic(id){
+        layer.confirm('确定删除吗？',{icon:3,title:'提示'},function(index){
+            $.ajax({
+                type:"POST",
+                datetype:"json",
+                url:"/admin/project/deleteImage/"+id,
+                success:function(index){
+                    self.location.reload();
+                }
+            });
+        });
+    }
+
+    $(function(){
+        $.getJSON("/admin/project/detail/comment/"+pid+'/'+1,{current:1,size:3},function(json){
+            var data = json.data;
+            $('#proComment').empty();
+            var html ='';
+            $.each(data,function(index,comment){
+                html+='<div class="feed-element" ><a class="pull-left">'
+                    +'<img alt="image" class="img-circle" src="'+comment.createUserPic+'"> &nbsp;&nbsp;</a>'
+                    +'<div class="media-body " >'
+                    +'<small class="pull-right text-navy">'+changeDateFormat(comment.createTime)+'</small>'
+                    +'<strong class=" pull-left">'+comment.createUserNickName+'&nbsp;:</strong><br>'
+                    +' <strong>'+comment.content+'</strong> '
+                    +' <br> '
+                    +' </div></div>'
+            });
+            $('#proComment').html(html);
+        });
+    });
+
+        $(function(){
+        	$.getJSON("/admin/project/detail/comment/"+pid+'/'+2,{current:1,size:3},function(json){
+            var data = json.data;
+            $('#cusComment').empty();
+            var html ='';
+            $.each(data,function(index,comment){
+                html+='<div class="feed-element" ><a class="pull-left">'
+                    +'<img alt="image" class="img-circle" src="'+comment.createUserPic+'"> &nbsp;&nbsp;</a>'
+                    +'<div class="media-body " >'
+                    +'<small class="pull-right text-navy">'+changeDateFormat(comment.createTime)+'</small>'
+                    +'<strong class=" pull-left">'+comment.createUserNickName+'&nbsp;:</strong><br>'
+                    +' <strong>'+comment.content+'</strong> '
+                    +' <br> '
+                    +' </div></div>'
+            });
+            $('#cusComment').html(html);
+        });
+    });
+
+    function changeDateFormat(cellval) {
+        var dateVal = cellval + "";
+        if (cellval != null) {
+            var date = new Date(parseInt(dateVal.replace("/Date(", "").replace(")/", ""), 10));
+            var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+            var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+
+            var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+            var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+            var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+            return date.getFullYear() + "-" + month + "-" + currentDate + " " + hours + ":" + minutes + ":" + seconds;
+        }
+    }
+
+
+</script>
+
+</body>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="shortcut icon" th:href="@{/favicon.ico}">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/font-awesome.css}" rel="stylesheet">
+    <link th:href="@{/css/animate.css}" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link th:href="@{/css/plugins/easyui/easyui.css}" rel="stylesheet">
+
+    <style type="text/css">
+        #resImgs{
+            margin:10px 0 10px 0;
+            padding:0;
+        }.teamcon{
+             font-size: 15.5px;
+             font-weight: normal;
+             line-height: 8px;
+         } .teamInput{
+               border:none;
+               border-bottom: 2px solid #dbdbdb;
+               border-top:1px;
+               border-left:0px;
+               border-right:0px;
+           } .md{
+                 position:relative;
+                 lest:500px;
+             }.userInput{
+                  border:none;
+              }.aa{
+             }.userInputNow{
+                  border:none;
+                  background:transparent;
+              }.aa{
+               position:relative;
+             left:-100px;
+              }.butPlace{
+        	margin: -3px 5px 5px;
+    </style>
+
+</head>
+
+<body class="gray-bg">
+<div class="wrapper wrapper-content ">
+ <form class="form-horizontal m-t" id="teamFrm" method="post">
+    <div class="row">
+        <div class="col-sm-10">
+            <div class="mail-box-header teamcon">
+                <div class="pull-right " >
+                    <button class="btn btn-primary pull-right" id="subCreate">创建</button>
+                </div>
+                <div>
+                    <label class=" control-label">团队名称：</label>
+                    <input type="text" class="teamInput" id="name" name="name" >
+                    <label class="control-label">团队描述：</label>
+                    <input type="text" class="teamInput" id="description" name="description" >
+                </div>
+       		  </div> 
+       	   </div>
+       </div>
+	</form>    
+    <div class="row">
+        <div class="col-sm-10">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>人员列表</h5>
+                    <a class= "btn btn-primary btn-xs dropdown-toggle  pull-right butPlace" onclick="addMember()"><i class="glyphicon glyphicon-plus">&nbsp;添加人员</i></a>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="well" id="addUser" style="display:none">
+                            <div class="row diff-wrapper">
+                                <div class="col-md-5">
+                                    <h4>请输入人员信息</h4>
+                                    <form class="form-inline md" id="frmUser" method="post">
+	                                     <span class="form-group">
+				                            <label class="col-sm-4 control-label">姓名:</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				                            <span class="col-sm-4">
+				                                <input type="text" class=" userInput" name="userNickName" id="userNickName">
+				                            </span>
+				                        </span>
+                                        <span class="form-group">
+				                            <label class="col-sm-4 control-label">电话号码:</label>
+				                            <span class="col-sm-3">
+				                                <input type="text" onkeyup="this.value=this.value.replace(/[^\d]/g,'') "
+                                                       onafterpaste="this.value=this.value.replace(/[^\d]/g,'')" class=" userInput" name="telephone" id="telephone">
+				                            </span>
+				                        </span>
+ 										<div class="form-group">
+				                            <div class="col-sm-8 col-sm-offset-3">
+				                                <button class="btn btn-primary  btn-xs dropdown-toggle"  onclick="addOne()">添加</button>
+				                            </div>
+				                        </div>                                   
+				                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12"  >
+                        <dt>
+                            <ul class="category-list" style="padding: 0">
+                                <li>
+                                    <br/>
+                                    <a href="#"> &nbsp;  &nbsp;至少要分配经理岗位和管理员</a>
+                                </li>
+                            </ul>
+                        </dt>
+                           <div class="full-height-scroll">
+                               <div class="table-responsive">
+                                   <form class="form-inline md" id="frmUserList" method="post" enctype="application/x-www-form-urlencoded">
+                                       <table class="table table-striped table-hover" id="tableId">
+                                           <tbody id="insertMember">
+                                           <tr id="aaa">
+                                               <td class="client-avatar"> </td><td class="client-avatar"> </td>
+                                               <td><input data-toggle="tab" class="client-link userInputNow" name="userNickName" id="userNickName" disabled="disabled" th:value="${user.nickName}">
+                                               </td><td class="client-avatar"> </td>
+                                               <td><input id="telephone" class="userInputNow" name="telephone" th:value="${user.telephone}" disabled="disabled"></td>
+                                               <td class="contact-type">
+                                               </td>
+                                               <td>请选择团队角色：<select id="roleIds" name="roleIds" class="easyui-combotree" style="width: 205px; height: 24px;">
+                                               </select></td><td class="client-avatar"> </td>
+                                           </tr>
+                                           </tbody>
+                                       </table>
+                                   </form>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+   </div>
+<!-- 全局js -->
+<div th:replace="common :: commonjs"></div>
+<script th:src="@{/js/plugins/easyui/jquery.easyui.min.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+    var user = [[${user}]];
+    var roleList = [[${roleList}]];
+    document.getElementById('userNickName').innerText=user.nickName;
+    document.getElementById('telephone').innerText=user.telephone;
+    count=0;
+
+    $("#subCreate").click(function(){
+          $("#teamFrm").validate({
+             rules: {
+                 name: {
+                     required: true
+                 },
+                 description: {
+                     required: false
+                 }
+             },
+             messages: {},
+             submitHandler:function(){ 
+	        var tabLen = document.getElementById("tableId");
+	        var jsonT = "[";
+	        //用于判断是否有经理及财务
+	        var judge = new Array();
+	        for (var i = 0; i < tabLen.rows.length; i++) {
+	            var name = $("#insertMember").children("tr").eq(i).find("td").eq(2).find("input").val();
+	            var telephone =$("#insertMember").children("tr").eq(i).find("td").eq(4).find("input").val();
+	            var len = $("#insertMember").children("tr").eq(i).find("td").eq(6).find("input[type='hidden']").length;
+	            var roleIds=new Array();
+	            if(len==5){
+	                roleIds.push(21);
+	                roleIds.push(22);
+	                roleIds.push(23);
+	                roleIds.push(24);
+	                judge.push("23");
+	                judge.push("24");
+	            }else{
+	                var aa='';
+	                $("#insertMember").children("tr").eq(i).find("td").eq(6).find("input[type='hidden']").each(function(){
+	                    aa=$(this).val();
+	                    roleIds.push(aa);
+	                    judge.push(aa);
+	                })
+	            }
+	            jsonT += '{"userNickName":"' + name + '","telephone":"' + telephone + '","roleIds":['+roleIds+']},'
+	        };
+	        var  ss = judge.indexOf("23");
+	        var  ss = judge.indexOf("24");
+	        if(judge.indexOf("23") == -1||judge.indexOf("23") ==-1){
+	        	 layer.open({
+	                 type: 0,
+	                 title: '警告',
+	                 shadeClose: true,
+	                 border: [10, 0.8, '#5b0f00',true],
+	                 shade: [0.5, '#000'],
+	                 area: ['150px', '150px'],
+	                 content:'<div align="center">请至少分配经理岗位和管理员</div>'
+	             });
+	             return;
+	        }
+	        jsonT= jsonT.substr(0, jsonT.length - 1);
+	        jsonT += "]";
+	        console.log(jsonT);
+	        var name = $("#name").val();
+	        var description = $("#description").val();
+	        $.ajax({
+	        	type: "GET",                   //类型，POST或者GET
+	            dataType: 'json',
+	            url: "/admin/team/teamcreate",
+	            async:true,
+	            data:{
+	                name:name,
+	                description:description,
+	                tjson:jsonT
+	            },
+	            error:function(request){
+	                console.log("服务失败！");
+	            },
+	            success: function(result){
+	            	var teamId = result.data;
+	            	self.location='/admin/team/detail/'+teamId; 
+	            }
+   			  })
+             }
+         });
+    });
+
+    //添加的user生成复选框，并生成动态id
+    function addRole(count) {
+        var tt=new Array();
+        $(roleList).each(function(index,element){
+            tt.push({"id":element.id,"text":element.description});
+        })
+        $('#roleIds'+count).combotree({
+            valueField: "id", //Value字段
+            textField: "text", //Text字段
+            multiple: true,
+            data: [{ "id": 1, "text": "全部", "children":tt}],
+            //                url: "tree_data2.json", //数据源
+            onCheck: function (node, checked) {
+                //让全选不显示
+                $("#roleIds"+count).combotree("setText", $("#roleIds"+count).combobox("getText").toString().replace("全选,", ""));
+            },
+            onClick: function (node, checked) {
+                //让全选不显示
+                $("#roleIds"+count).combotree("setText", $("#roleIds"+count).combobox("getText").toString().replace("全选,", ""));
+            }
+        });
+    }
+
+    function addMember(){
+        $("#addUser").toggle();
+    }
+    //添加用户
+    function addOne(){
+        ++count;
+        $("#frmUser").validate({
+            rules: {
+                userNickName: {
+                    required: true
+                },
+                telephone: {
+                    required: true
+                }
+            }
+         ,messages: {},
+        submitHandler:function(){
+        var userNickName = $("#userNickName").val();
+        var telephone = $("#telephone").val();
+        var html ="";
+        var html ='<tr id="del'+count+'"><td class="client-avatar"></td><td class="client-avatar"> </td>'
+            +'<td><input data-toggle="tab" class="client-link userInput" id="userNickName" name="userNickName" disabled="disabled" value="'+userNickName+'"></td><td class="client-avatar"> </td>'
+            +'<td><input id="telephone" class="userInput" disabled="disabled" name="telephone" value="'+telephone+'"></span></td>'
+            +'<td class="contact-type"></td>'
+            +'<td>请选择团队角色：<select id="roleIds'+count+'" name="roleIds" class="easyui-combotree" style="width: 205px; height: 24px;">'
+            +'</select></td>'
+            +'<td class="client-avatar"><button class="btn btn-danger btn-xs"  onclick="del('+count+')"><i class="fa fa-remove"></i>删除</button></td></tr>'
+        $("#insertMember").append(html);
+        addRole(count);
+        $("#userNickName").val("");
+        $("#telephone").val("");
+        }
+        });
+    }
+
+    function del(id){
+    	$("#del"+id).remove();
+    }
+    
+    //起始roleId生成复选框
+    $(function () {
+        var tt=new Array();
+        $(roleList).each(function(index,element){
+            tt.push({"id":element.id,"text":element.description});
+        })
+        $('#roleIds').combotree({
+            valueField: "id", //Value字段
+            textField: "text", //Text字段
+            multiple: true,
+            data: [{ "id": 1, "text": "全部", "children":tt}],
+            //                url: "tree_data2.json", //数据源
+            onCheck: function (node, checked) {
+                //让全选不显示
+                $("#roleIds").combotree("setText", $("#roleIds").combobox("getText").toString().replace("全选,", ""));
+            },
+            onClick: function (node, checked) {
+                //让全选不显示
+                $("#roleIds").combotree("setText", $("#roleIds").combobox("getText").toString().replace("全选,", ""));
+            }
+        });
+        
+    })
+</script>
+
+</body>
+
+</html>

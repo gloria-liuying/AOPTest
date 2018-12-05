@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8">
+<title>- 数据表格</title>
+<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+<link th:href="@{/css/font-awesome.min.css}" rel="stylesheet">
+<link th:href="@{/css/animate.css}" rel="stylesheet">
+<link th:href="@{/css/style.css}" rel="stylesheet">
+<link th:href="@{/css/plugins/bootstrap-table/bootstrap-table.min.css}"
+	rel="stylesheet">
+</head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content  animated fadeInRight">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox ">
+				<div class="ibox-title">
+						<h5>条件筛选</h5>
+					</div>
+					<div class="ibox-content" style="height: 150px">
+					<form role="form" id="frm"  class="form-inline" >
+						<div class="form-group ">
+                             <label  class="control-label">项目名称:&nbsp; </label>
+                             <select name="projectId" class="form-control" id="projectIds"
+								onchange="setCookies(this.options[this.options.selectedIndex].value)">
+                             </select>
+                        </div>
+                        <div class="form-group" >
+                            <label  class="control-label"  >销售姓名: </label>
+                            <select name="userId" style="width: 150px" class="form-control" id="saleIds" >
+                            </select>
+                        </div>
+                        <div class="form-group " >
+                             <label  class="control-label">客户姓名:&nbsp; </label>
+                             <input name="customerName" class="form-control" type="text" placeholder="请输入客户姓名">
+                        </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <div class="form-group" >
+                            <label  class="control-label">选择首付时间范围:&nbsp; </label>
+                            <input name="startTime" type="text" id="datetimeStart"  class="form-control" placeholder="起始日期" readonly>
+                            &nbsp;&nbsp;
+                            -
+                            &nbsp;&nbsp;
+                            <input name="endTime" type="text" id="datetimeEnd"  class="form-control" placeholder="终止日期" readonly>
+                        </div>
+                         <hr>
+                         <div style="float:right;">
+	                        <button class="btn btn-primary" type="reset"  >
+									<i class="fa fa-undo"></i>&nbsp;重置
+							</button>
+							&nbsp;
+							<button class="btn btn-success " type="submit" >
+									<i class="fa fa-search"></i>&nbsp;筛选
+							</button>
+						</div>
+					</form>
+                </div>
+             </div>
+          </div>
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox ">
+					<div class="ibox-title">
+						<h5>房源列表</h5>
+					</div>
+					<div class="ibox-content">
+						<hr>
+						<div class="row row-lg">
+							<div class="col-sm-12">
+								<div class="example-wrap">
+									<div class="example lightBoxGallery">
+										<table id="table_list"></table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+<div th:replace="common :: commonjs"></div>
+<script th:src="@{/js/bootstrap-datetimepicker.min.js}"></script>
+<script th:src="@{/js/bootstrap-datetimepicker.zh-CN.js}"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+    	$.getJSON("/admin/house/project/all", function(json){
+	    	  var result = json.data;
+	    	  var projectIds= new Array();
+	            $.each(result,function(index,element){
+	            	var id = element.id
+					projectIds.push(id);
+	            });
+	    	  $("#projectIds").empty(); //清空内容
+	    	  var selectId = getCookie("cache_project_pledg");
+	    	  var proselect = "";
+	            if($.inArray(selectId,projectIds)==-1){
+	            	proselect = "";
+	    		  	}else{
+	    		  		proselect = "selected ='selected'";
+	    		  	}
+	            var opt = '<option value="" '+proselect+'>请选择项目名称</option>';
+	    	  for(var i = 0;i < result.length;i++){
+	    		  var select = "";
+	            	 if(selectId==result[i].id){
+		    			  select = "selected ='selected'";
+		    		  }
+	    		  opt += '<option value = "'+result[i].id+'" '+select+'>'+result[i].name+'</option>'
+	    	  }
+	    	  $("#projectIds").append(opt);
+	    	  var projectId = $("#projectIds").val();
+		 $.getJSON("/admin/customer/user/all", {projectId:projectId}, function (json) {
+	           var result = json.data;
+	           $("#saleIds").empty(); //清空内容
+	           var opt = '<option value="" style="width: 20%" selected="selected">请选择销售</option>';
+	           for (var i = 0; i < result.length; i++) {
+	               opt += '<option style="width: 20%" value = "' + result[i].id + '">' + result[i].nickName + '</option>'
+	           }
+	           $("#saleIds").append(opt);
+	       });
+    	//初始化表格,动态从服务器加载数据
+		$("#table_list").bootstrapTable({
+		    //使用get请求到服务器获取数据
+		    method: "GET",
+		    //必须设置，不然request.getParameter获取不到请求参数
+		    contentType: "application/x-www-form-urlencoded",
+		    //获取数据的Servlet地址
+		    url: "/admin/process/list",
+		    //表格显示条纹
+		    striped: true,
+		    //启动分页
+		    pagination: true,
+		    //每页显示的记录数
+		    pageSize: 15,
+		    //当前第几页
+		    pageNumber: 1,
+		    //记录数可选列表
+		    pageList: [15, 20, 25],
+		    //是否启用查询
+		    search: false,
+		    paginationPreText: '‹',//指定分页条中上一页按钮的图标或文字,这里是<  
+	        paginationNextText: '›',//指定分页条中下一页按钮的图标或文字,这里是>  
+	        data_local: "zh-US",//表格汉化  
+		    //是否启用详细信息视图
+		    // detailView:true,
+		  //  detailFormatter:detailFormatter,
+		    //表示服务端请求
+		    sidePagination: "server",
+		    //设置为limit可以获取limit, offset, search, sort, order
+		    queryParamsType: "",
+		    clickToSelect : true, //是否启用点击选中行
+		    //json数据解析
+		    responseHandler: function(res) {
+		        return {
+		            "rows": res.data.records,
+		            "total": res.data.total
+		        };
+		    },
+		    queryParams:function queryParams(params) {   //设置查询参数
+	            var param = {
+	            	projectId:projectId,
+	            	size: params.pageSize,    //每页多少条数据
+	            	current: params.pageNumber  // 页码
+	            };
+	            return param;
+	        },
+	        idField: "processId",
+		    //数据列
+		    columns: [{
+		    	title:"流程id",
+		    	field:"processId",
+		    	visible:true
+		    },{
+		        title: "客户姓名",
+		        sortable: true,
+		        field: "customerName"
+		     },{
+		        title: "电话",
+		        sortable: true,
+		        field: "telephone"
+		    },{
+		        title: "房源/房间号",
+		        sortable: true,
+		        field: "houseName",
+		        formatter:function(value,row,index){
+		        	if(value=="默认楼盘名称"){
+		        		return '<span class="label label-warning">默认楼盘名称</span>';
+		        	}
+		        	return '<span class="label label-danger">'+value+'</span>';
+		        }
+		    },{
+		        title: "流程起始",
+		        sortable: true,
+		        field: "startPoint",
+		        formatter:function(value,row,index){
+		        	if(value=="认筹申请"){
+		        		return '<span class="label label-warning">认筹</span>';
+		        	}
+		        	if(value=="认购申请"){
+		        		return '<span class="label label-info">认购</span>';
+		        	}
+		        	return '<span class="label label-success">签合同</span>';
+		        }
+		    },{
+		        title: "认筹金",
+		        sortable: true,
+		        field: "pcAmount",
+		        formatter(value,row,index){
+			        if(value!=null){
+		        		return '<span>'+value+'元 </span>'
+		        	}}
+		    },{
+		        title: "流程进度",
+		        sortable: true,
+		        field: "currentPoint" 
+		    },{
+		        title: "成交价格",
+		        sortable: true,
+		        field: "actualPayAmount" ,
+		        formatter:function(value,row,index){
+		        	if(value!=null){
+		        		return '<span>'+value.toFixed(1)+'元 </span>'
+		        	}
+		        	
+		        }
+		    },{
+		        title: "贷款",
+		        sortable: true,
+		        field: "isDisposable",
+		        formatter:function(value,row,index){
+		        	if(value){
+		        		return '<span>否 </span>'
+		        	}
+		        	return '<span>是</span>'
+		        }
+		    },{
+		        title: "首付金额/一次性付款金额",
+		        sortable: true,
+		        field: "firstPayment" ,
+		        formatter(value,row,index){
+		        if(value!=null){
+	        		return '<span>'+value+'元 </span>'
+	        	}}
+		    },{
+		        title: "贷款金额",
+		        sortable: true,
+		        field: "loan",
+		        formatter(value,row,index){
+		        if(value!=null){
+	        		return '<span>'+value+'元 </span>'
+	        	}}
+		    },{
+		        title: "首付时间",
+		        sortable: true,
+		        field: "firstPayTime" 
+		    },{
+		        title: "优惠政策",
+		        sortable: true,
+		        field: "saleStrategy",
+            },{
+	    	 	title: "操作",
+		        field: "empty",
+                formatter: function (value, row, index) {
+                 	var operateHtml = '<a class="btn btn-info btn-xs" type="button" href="/admin/process/detail/'+row.processId+'"><i class="fa fa-arrows"></i>&nbsp;详情</a>';
+                     return operateHtml;
+                 }
+		    }]
+		});
+    	
+		 $('#res_table').on('uncheck.bs.table check.bs.table check-all.bs.table uncheck-all.bs.table',function(e,rows){
+		        var datas = $.isArray(rows) ? rows : [rows];        // 点击时获取选中的行或取消选中的行
+		        examine(e.type,datas);                              // 保存到全局 Array() 里
+	   	});
+
+    	});
+    });
+     
+    $("#frm").validate({
+	    rules: {
+	    	projectId: {
+	        required: false,
+	        minlength: 1,
+	    	maxlength: 30
+	      },
+    		userId:{
+		    required:false
+    	},customerName:{
+    		required:false
+    	},startTime:{
+    		required:false
+    	},endTime:{
+    		required:false
+    	}
+	    },
+	    messages: {},
+	    submitHandler:function(form){
+	    	var data = $(form).serialize();
+	    	var opt ={
+	    			url:"/admin/process/list?"+data,
+	    			silent: true,
+	    	}
+	    	$("#table_list").bootstrapTable('refresh',opt); 
+        }
+	});
+    
+   /*  function detail(id){
+    	layer.open({
+    		type:2,
+    		title:'下一步：创建认购',
+    		shadeClose:true,
+    		shade: [0.5, '#000'],
+    		area: ['600px', '600px'],
+     	    content: '/admin/process/detail/'+id,
+     	    end: function(index){
+     	    	 $('#table_list').bootstrapTable("refresh");
+    	    	 }
+     	   });
+    } */
+     
+     
+     function getCookie(c_name)
+     {
+     if (document.cookie.length>0)
+       {
+       c_start=document.cookie.indexOf(c_name + "=")
+       if (c_start!=-1)
+         { 
+         c_start=c_start + c_name.length+1 
+         c_end=document.cookie.indexOf(";",c_start)
+         if (c_end==-1) c_end=document.cookie.length
+         return unescape(document.cookie.substring(c_start,c_end))
+         } 
+       }
+     return ""
+     }
+     
+     function setCookies(id){
+     	setCookie("cache_project_pledg",id,30);
+     	 $.getJSON("/admin/customer/user/all", {projectId: id}, function (json) {
+             var result = json.data;
+             $("#saleIds").empty(); //清空内容
+             var opt = '<option value="" style="width: 20%" selected="selected">请选择销售</option>';
+             for (var i = 0; i < result.length; i++) {
+                 opt += '<option style="width: 20%" value = "' + result[i].id + '">' + result[i].nickName + '</option>'
+             }
+             $("#saleIds").append(opt);
+         });
+     	var form = document.getElementById("frm");
+     	form.submit();//form表单提交
+     }
+     
+     //设置cookie
+     function setCookie(c_name,value,expiredays)
+     {
+     var exdate=new Date()
+     exdate.setDate(exdate.getDate()+expiredays)
+     document.cookie=c_name+ "=" +escape(value)+
+     ((expiredays==null) ? "" : ";expires="+exdate.toGMTString())
+     }
+     
+     $('#datetimeStart').datetimepicker({
+         language:  'zh-CN',
+         format:'yyyy-mm-dd hh:ii:ss',
+         pickDate: true,
+         pickTime: true,
+         clearBtn: true,
+         hourStep: 1,
+         minuteStep: 1,
+         secondStep: 30,
+         weekStart: 1, /*以星期一为一星期开始*/
+         todayBtn:  1,
+         autoclose: 1,
+         minView:0, /*精确到s*/
+         pickerPosition: "bottom-left"
+     }).on("changeDate",function(ev){  //值改变事件
+         //选择的日期不能大于第二个日期控件的日期
+         if(ev.date){
+             $("#datetimeEnd").datetimepicker('setStartDate', new Date(ev.date.valueOf()));
+         }else{
+             $("#datetimeEnd").datetimepicker('setStartDate',null);
+         }
+     });
+     $('#datetimeEnd').datetimepicker({
+         language:  'zh-CN',
+         format:'yyyy-mm-dd hh:ii:ss',
+         pickDate: true,
+         pickTime: true,
+         clearBtn: true,
+         hourStep: 1,
+         minuteStep: 1,
+         secondStep: 30,
+         weekStart: 1, /*以星期一为一星期开始*/
+         todayBtn:  1,
+         autoclose: 1,
+         minView:0, /*精确到s*/
+         pickerPosition: "bottom-left"
+     }).on("changeDate",function(ev){
+         //选择的日期不能小于第一个日期控件的日期
+         if(ev.date){
+             $("#datetimeStart").datetimepicker('setEndDate', new Date(ev.date.valueOf()));
+         }else{
+             $("#datetimeStart").datetimepicker('setEndDate',new Date());
+         }
+     });
+
+</script>
+
+</html>

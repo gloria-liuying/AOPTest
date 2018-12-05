@@ -1,0 +1,16 @@
+server:
+  port: 10006
+  context-path: /admin
+spring:
+  application:
+    name: service-admin
+  profiles:
+    active: dev
+  http:
+    multipart:
+      max-file-size: 100Mb
+      max-request-size: 100Mb
+  thymeleaf:
+    content-type: text/html; charset=utf-8
+    mode: LEGACYHTML5
+    cache: false
